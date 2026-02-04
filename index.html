@@ -3,129 +3,164 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Slide</title>
+  <title>Happy Birthday</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
-    <div class="topbar">
-      <div class="brand">🎈</div>
-      <div class="dots" id="dots"></div>
-      <button class="iconbtn" id="muteGlobal" type="button" aria-label="Mute">🔊</button>
-    </div>
+    <header class="top">
+      <div class="pill">
+        <span class="dot"></span>
+        <span class="title">for you</span>
+      </div>
+
+      <div class="nav">
+        <button class="icon" id="prev" type="button">‹</button>
+        <div class="dots" id="dots"></div>
+        <button class="icon" id="next" type="button">›</button>
+      </div>
+    </header>
 
     <main class="deck" id="deck">
-      <section class="slide" data-decor="hello-dolls">
+      <section class="slide" data-decor="butterfly">
         <div class="card hero">
-          <div class="badge">Slide 1</div>
-          <h1>Hai 👋</h1>
-          <p>Geser atau klik Next. Dekornya beda tiap slide, biar hidup.</p>
-          <div class="actions">
-            <button class="btn" data-next type="button">Next ▶</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide" data-decor="balloons">
-        <div class="card">
-          <div class="badge">Slide 2</div>
-          <h1>Mini Wish</h1>
-          <p>Tulis wish lu, biar gak cuma jadi draft di otak.</p>
-
-          <div class="field">
-            <input id="wish" type="text" placeholder="Tulis wish di sini..." maxlength="80" />
-            <button class="btn" id="saveWish" type="button">Simpan</button>
-          </div>
-
-          <div class="actions">
-            <button class="btn ghost" data-prev type="button">◀ Prev</button>
-            <button class="btn" data-next type="button">Next ▶</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="slide" data-decor="confetti">
-        <div class="card">
-          <div class="badge">Slide 3</div>
-          <h1>Mini Game</h1>
-          <p>Tap bonekanya 10x biar dia bilang “Say hello” 😏</p>
+          <h1>Tap kupu-kupu 🦋</h1>
+          <p>Sentuh kupu-kupunya sampai penuh. Nanti dia “nyapa”.</p>
 
           <div class="game">
-            <button class="toy" id="toy" type="button" aria-label="Toy">
-              <span class="toy-face">🧸</span>
-              <span class="toy-text">tap me</span>
+            <button class="butterfly" id="bf" type="button" aria-label="Butterfly">
+              <img src="assets/butterfly.png" alt="Butterfly" />
+              <span class="spark s1">✦</span>
+              <span class="spark s2">✦</span>
+              <span class="spark s3">✦</span>
             </button>
+
             <div class="meter">
-              <div class="meter-bar"><div class="meter-fill" id="meterFill"></div></div>
-              <div class="meter-meta">
-                <span id="tapCount">0</span><span>/10</span>
-              </div>
+              <div class="bar"><div class="fill" id="bfFill"></div></div>
+              <div class="count"><span id="bfCount">0</span><span>/12</span></div>
             </div>
           </div>
 
           <div class="actions">
-            <button class="btn ghost" data-prev type="button">◀ Prev</button>
-            <button class="btn" data-next type="button">Next ▶</button>
+            <button class="btn" data-next type="button">Lanjut</button>
           </div>
         </div>
       </section>
 
-      <section class="slide" data-decor="stars">
+      <section class="slide" data-decor="hello">
         <div class="card">
-          <div class="badge">Slide 4</div>
-          <h1>Backsound</h1>
-          <p>Klik play. Autoplay di HP itu sok suci, jadi kudu pencet sendiri.</p>
+          <h1>Haiii kamu 🫶</h1>
+          <p id="openingText">Aku mampir bentar, bawa vibes manis dan sedikit jahil.</p>
 
           <div class="player">
             <div class="track">
               <div class="cover" id="cover">♪</div>
               <div class="meta">
-                <div class="title" id="trackTitle">Special Song</div>
-                <div class="artist" id="trackArtist">for you</div>
+                <div class="t" id="trackTitle">Backsound</div>
+                <div class="a" id="trackArtist">tap play ya</div>
               </div>
             </div>
 
             <input id="seek" type="range" min="0" max="100" value="0" />
-
             <div class="controls">
-              <button id="playBtn" class="btn" type="button">▶</button>
-              <div class="time">
-                <span id="cur">0:00</span>
-                <span> / </span>
-                <span id="dur">0:00</span>
-              </div>
-              <button id="muteBtn" class="btn ghost" type="button">🔊</button>
+              <button class="btn" id="playBtn" type="button">▶</button>
+              <div class="time"><span id="cur">0:00</span><span> / </span><span id="dur">0:00</span></div>
+              <button class="btn ghost" id="muteBtn" type="button">🔊</button>
             </div>
           </div>
 
           <div class="actions">
-            <button class="btn ghost" data-prev type="button">◀ Prev</button>
-            <button class="btn" data-next type="button">Next ▶</button>
+            <button class="btn ghost" data-prev type="button">Balik</button>
+            <button class="btn" data-next type="button">Lanjut</button>
           </div>
         </div>
       </section>
 
-      <section class="slide" data-decor="hearts">
-        <div class="card hero">
-          <div class="badge">Slide 5</div>
-          <h1>Done ✅</h1>
-          <p id="finalText">Udah. Jangan lupa minum air.</p>
+      <section class="slide" data-decor="cake">
+        <div class="card">
+          <h1>Tiup kuenya 🎂</h1>
+          <p>Tekan kuenya buat matiin lilin. Kalau mau gaya, bisa pakai mic juga.</p>
+
+          <div class="cakeWrap">
+            <button class="cake" id="cakeBtn" type="button" aria-label="Cake">
+              <img id="cakeImg" src="assets/cake.gif" alt="Cake" />
+              <span class="hint" id="cakeHint">tap</span>
+            </button>
+
+            <div class="mic">
+              <button class="btn ghost" id="micBtn" type="button">Tiup pakai mic</button>
+              <div class="micStat" id="micStat">off</div>
+            </div>
+          </div>
+
           <div class="actions">
-            <button class="btn ghost" data-prev type="button">◀ Prev</button>
+            <button class="btn ghost" data-prev type="button">Balik</button>
+            <button class="btn" data-next type="button">Lanjut</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-decor="memories">
+        <div class="card">
+          <h1>Kenangan 📸</h1>
+          <p>Geser fotonya, jangan cuma geser chat doang.</p>
+
+          <div class="gallery">
+            <button class="icon mini" id="gPrev" type="button">‹</button>
+            <div class="frame">
+              <img id="gImg" src="assets/p1.jpg" alt="Photo" />
+            </div>
+            <button class="icon mini" id="gNext" type="button">›</button>
+          </div>
+
+          <div class="cap" id="gCap">1 / 4</div>
+
+          <div class="actions">
+            <button class="btn ghost" data-prev type="button">Balik</button>
+            <button class="btn" data-next type="button">Lanjut</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-decor="wish">
+        <div class="card">
+          <h1>Wish kamu ✨</h1>
+          <p>Tulis harapan kamu. Simpen di sini, bukan cuma disimpen di kepala.</p>
+
+          <div class="field">
+            <input id="wish" type="text" maxlength="90" placeholder="Tulis wish kamu..." />
+            <button class="btn" id="saveWish" type="button">Simpan</button>
+          </div>
+
+          <div class="actions">
+            <button class="btn ghost" data-prev type="button">Balik</button>
+            <button class="btn" data-next type="button">Lanjut</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide" data-decor="final">
+        <div class="card hero">
+          <h1>Selamat ulang tahun 🎀</h1>
+          <p id="finalMsg">Semoga hari ini lembut, lucu, dan kamu disayangin semesta (dan aku).</p>
+          <div class="note" id="wishOut"></div>
+
+          <div class="actions">
+            <button class="btn ghost" data-prev type="button">Balik</button>
             <button class="btn" id="restart" type="button">Ulang dari awal</button>
           </div>
         </div>
       </section>
     </main>
 
-    <div id="toast" class="toast">
-      <div class="toast-card">
-        <div class="toast-emoji" id="toastEmoji">🎉</div>
-        <div class="toast-text">
-          <div class="toast-title" id="toastTitle">Yay!</div>
-          <div id="toastMsg" class="toast-msg">Notif</div>
+    <div class="toast" id="toast">
+      <div class="toastCard">
+        <div class="emoji" id="tEmoji">🫶</div>
+        <div class="txt">
+          <div class="ttl" id="tTitle">Hey</div>
+          <div class="msg" id="tMsg">...</div>
         </div>
-        <button id="toastClose" class="toast-close" type="button">✕</button>
+        <button class="x" id="tClose" type="button">✕</button>
       </div>
     </div>
   </div>
