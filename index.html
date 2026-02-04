@@ -6,17 +6,16 @@
   <title>For You</title>
   <style>
     :root{
-      --bg1:#ffe7f2;
-      --bg2:#e7f0ff;
+      --bg1:#ffe9f4;
+      --bg2:#e9f2ff;
       --card:#ffffffcc;
       --card2:#ffffffee;
       --text:#1f2340;
       --muted:#5c628a;
       --btn:#1f2340;
       --btnText:#fff;
-      --btn2:#ffffff;
-      --shadow: 0 18px 45px rgba(31,35,64,.18);
-      --shadow2: 0 10px 30px rgba(31,35,64,.12);
+      --shadow: 0 18px 45px rgba(31,35,64,.16);
+      --shadow2: 0 10px 30px rgba(31,35,64,.10);
       --radius: 22px;
     }
 
@@ -29,7 +28,7 @@
       background:
         radial-gradient(1200px 900px at 20% 10%, var(--bg1), transparent 55%),
         radial-gradient(1200px 900px at 80% 20%, var(--bg2), transparent 55%),
-        linear-gradient(180deg, #fff0f7, #eef5ff);
+        linear-gradient(180deg, #fff2f8, #eef6ff);
       overflow-x:hidden;
     }
 
@@ -42,18 +41,18 @@
     .decor{
       position:absolute;
       opacity:.7;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.12));
-      font-size:22px;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.10));
+      font-size:20px;
       transform: translateZ(0);
     }
     .d1{top:14px; left:14px}
     .d2{top:14px; right:14px}
     .d3{bottom:14px; left:14px}
     .d4{bottom:14px; right:14px}
-    .d5{top:92px; left:10px; opacity:.55; font-size:18px}
-    .d6{top:120px; right:12px; opacity:.55; font-size:18px}
-    .d7{bottom:96px; left:10px; opacity:.55; font-size:18px}
-    .d8{bottom:120px; right:12px; opacity:.55; font-size:18px}
+    .d5{top:92px; left:10px; opacity:.45; font-size:16px}
+    .d6{top:120px; right:12px; opacity:.45; font-size:16px}
+    .d7{bottom:96px; left:10px; opacity:.45; font-size:16px}
+    .d8{bottom:120px; right:12px; opacity:.45; font-size:16px}
 
     .app{
       position:relative;
@@ -86,13 +85,13 @@
       padding:8px 12px;
       border-radius:999px;
       background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
-      font-weight:700;
+      box-shadow: 0 12px 25px rgba(31,35,64,.08);
+      font-weight:800;
     }
     .dot{
       width:10px;height:10px;border-radius:99px;
-      background: linear-gradient(180deg, #ff8cc7, #ff4f9b);
-      box-shadow: 0 8px 16px rgba(255,79,155,.35);
+      background: linear-gradient(180deg, #ff8cc7, #7aa7ff);
+      box-shadow: 0 8px 16px rgba(122,167,255,.25);
     }
 
     .nav{
@@ -106,9 +105,9 @@
       border-radius:999px;
       padding:10px 12px;
       background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
+      box-shadow: 0 12px 25px rgba(31,35,64,.08);
       color:var(--text);
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       display:flex;
       align-items:center;
@@ -116,24 +115,20 @@
       user-select:none;
       touch-action:manipulation;
     }
-
     .pill:active{transform:scale(.98)}
-    .pill.primary{
-      background: var(--btn);
-      color: var(--btnText);
-    }
 
     .progress{
       display:flex;
       gap:6px;
-      padding:0 10px;
+      padding:0 6px;
       align-items:center;
       justify-content:center;
     }
     .p{
       width:10px;height:10px;border-radius:999px;
       background:#ffffff90;
-      box-shadow: 0 8px 18px rgba(31,35,64,.12);
+      box-shadow: 0 8px 18px rgba(31,35,64,.10);
+      cursor:pointer;
     }
     .p.on{
       width:22px;
@@ -169,18 +164,8 @@
       gap:14px;
     }
 
-    h1{
-      margin:0;
-      font-size:28px;
-      letter-spacing:.2px;
-      line-height:1.15;
-    }
-    p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:15px;
-    }
+    h1{margin:0;font-size:28px;letter-spacing:.2px;line-height:1.15}
+    p{margin:0;color:var(--muted);line-height:1.45;font-size:15px}
 
     .actions{
       margin-top:auto;
@@ -192,6 +177,7 @@
       background: linear-gradient(180deg, transparent, #ffffffcc 40%, #ffffffee);
       backdrop-filter: blur(10px);
     }
+
     .btn{
       border:none;
       border-radius: 16px;
@@ -201,17 +187,11 @@
       flex:1;
       user-select:none;
       touch-action:manipulation;
-      box-shadow: 0 14px 30px rgba(31,35,64,.12);
+      box-shadow: 0 14px 30px rgba(31,35,64,.10);
     }
     .btn:active{transform:scale(.99)}
-    .btn.secondary{
-      background:#fff;
-      color:var(--text);
-    }
-    .btn.primary{
-      background: var(--btn);
-      color: var(--btnText);
-    }
+    .btn.secondary{background:#fff;color:var(--text)}
+    .btn.primary{background: var(--btn);color: var(--btnText)}
 
     .mini{
       font-size:12px;
@@ -219,11 +199,13 @@
       border-radius:999px;
       background:#fff;
       display:inline-flex;
-      gap:8px;
+      gap:10px;
       align-items:center;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
+      box-shadow: 0 12px 25px rgba(31,35,64,.08);
       width:max-content;
+      font-weight:800;
     }
+    .mini .mut{font-weight:900;color:var(--muted)}
 
     .game-area{
       position:relative;
@@ -240,26 +222,52 @@
 
     #butterfly{
       position:absolute;
-      width:84px;
+      width:86px;
       height:auto;
       cursor:pointer;
       user-select:none;
       touch-action:manipulation;
       filter: drop-shadow(0 12px 18px rgba(31,35,64,.14));
       transform: translateZ(0);
+      will-change: transform, left, top;
     }
 
-    .float-hint{
+    .overlay{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(8px);
+      z-index:5;
+    }
+    .overlay.show{display:flex}
+    .overlay-card{
+      width:min(390px, 92%);
+      background:#fff;
+      border-radius:20px;
+      box-shadow: var(--shadow2);
+      padding:16px;
+      text-align:center;
+    }
+    .overlay-card b{font-size:18px}
+    .overlay-card p{margin:10px 0 12px}
+    .overlay-actions{
       display:flex;
       gap:10px;
-      align-items:flex-start;
-      padding:12px 12px;
-      border-radius:18px;
-      background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
     }
-    .float-hint b{display:block}
-    .float-hint span{color:var(--muted); font-size:14px; line-height:1.35}
+
+    .big-msg{
+      padding:14px 14px;
+      border-radius:20px;
+      background:#fff;
+      box-shadow: 0 12px 25px rgba(31,35,64,.08);
+      font-size:15px;
+      color:var(--muted);
+      line-height:1.5;
+    }
 
     .cake-wrap{
       display:flex;
@@ -273,7 +281,7 @@
       cursor:pointer;
       user-select:none;
       touch-action:manipulation;
-      filter: drop-shadow(0 18px 35px rgba(31,35,64,.18));
+      filter: drop-shadow(0 18px 35px rgba(31,35,64,.16));
       transform: translateZ(0);
     }
 
@@ -290,7 +298,7 @@
       padding:10px 12px;
       border-radius:16px;
       background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
+      box-shadow: 0 12px 25px rgba(31,35,64,.08);
     }
     .switch{
       width:52px; height:30px;
@@ -306,7 +314,7 @@
       width:22px; height:22px;
       border-radius:999px;
       background:#fff;
-      box-shadow: 0 12px 18px rgba(31,35,64,.18);
+      box-shadow: 0 12px 18px rgba(31,35,64,.14);
       transition: all .18s ease;
     }
     .switch.on{
@@ -314,69 +322,7 @@
     }
     .switch.on .knob{left:26px}
 
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap:12px;
-    }
-    .ph{
-      aspect-ratio: 1/1;
-      border-radius:18px;
-      overflow:hidden;
-      background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
-      position:relative;
-    }
-    .ph img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .big-msg{
-      padding:14px 14px;
-      border-radius:20px;
-      background:#fff;
-      box-shadow: 0 12px 25px rgba(31,35,64,.10);
-      font-size:15px;
-      color:var(--muted);
-      line-height:1.5;
-    }
-
-    .wishbox{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .input{
-      width:100%;
-      border: 1px solid rgba(31,35,64,.10);
-      background:#fff;
-      border-radius:16px;
-      padding:14px 14px;
-      font-size:15px;
-      outline:none;
-    }
-    .input:focus{
-      border-color: rgba(122,167,255,.7);
-      box-shadow: 0 0 0 4px rgba(122,167,255,.18);
-    }
-
-    .save-row{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .save-row .btn{flex:0 0 auto; padding:12px 14px}
-    .saved{
-      font-size:13px;
-      color: var(--muted);
-    }
-
-    .fade-in{
-      animation: fi .24s ease both;
-    }
+    .fade-in{animation: fi .24s ease both}
     @keyframes fi{
       from{opacity:0; transform: translateY(6px)}
       to{opacity:1; transform: translateY(0)}
@@ -384,7 +330,7 @@
 
     @media (max-width:380px){
       h1{font-size:24px}
-      #butterfly{width:74px}
+      #butterfly{width:76px}
     }
   </style>
 </head>
@@ -411,49 +357,53 @@
         <button class="pill" id="prevBtn">‹</button>
         <div class="progress" id="progress"></div>
         <button class="pill" id="nextBtn">›</button>
-        <button class="pill primary" id="musicBtn">▶︎</button>
       </div>
     </div>
 
     <div class="stage">
       <section class="card" data-slide="0">
         <div class="card-inner">
-          <div class="mini">🦋 <b>Tangkap kupu-kupunya</b> <span id="scoreText" style="color:var(--muted); font-weight:700;">0</span></div>
+          <div class="mini">
+            🦋 Tangkap: <span id="scoreText" class="mut">0/10</span>
+            ⏱️ <span id="timeText" class="mut">25</span>s
+          </div>
 
           <h1>Mini game dulu</h1>
-          <p>Kupu-kupunya kabur ke mana-mana. Tap dia buat nangkep. Nanti kupu-kupu ini bisa kamu ganti mukanya jadi muka orang.</p>
+          <p>Tap kupu-kupu yang kabur. Target 10 tangkapan sebelum 25 detik.</p>
 
           <div class="game-area" id="gameArea">
             <img id="butterfly" src="assets/butterfly.png" alt="butterfly" draggable="false" />
-          </div>
 
-          <div class="float-hint">
-            <div>💡</div>
-            <div>
-              <b>Tips</b>
-              <span>Kalau musik belum jalan, pencet tombol ▶︎ dulu. Setelah itu pindah slide pun musiknya tetep lanjut.</span>
+            <div class="overlay" id="gameOverlay">
+              <div class="overlay-card">
+                <b id="gameOverTitle">Waktu habis</b>
+                <p id="gameOverText">Skor kamu 0/10. Ulangi dulu ya.</p>
+                <div class="overlay-actions">
+                  <button class="btn secondary" id="retryBtn">Ulangi</button>
+                  <button class="btn primary" id="skipBtn">Skip aja</button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div class="actions">
-            <button class="btn secondary" id="resetGameBtn">Reset</button>
-            <button class="btn primary" data-go="1">Lanjut</button>
+          <div class="big-msg">
+            Menang = lanjut otomatis ke musik. Kalah = muncul tombol ulangi. Simple, ga drama.
           </div>
         </div>
       </section>
 
       <section class="card" data-slide="1">
         <div class="card-inner">
-          <h1>Hai kamu 🫶</h1>
-          <p>Ini kecil-kecilan tapi niat. Semoga kamu senyum dulu sebelum lanjut ya.</p>
+          <h1>Menu musik 🫶</h1>
+          <p>Di Klik Play Yaa, Biar Ada Musiknya!</p>
 
           <div class="big-msg">
-            Kamu itu tipe orang yang kalau muncul di hidup seseorang, suasananya jadi lebih hangat.
-            Jadi ya, sekarang kamu duduk manis dulu, nikmatin musiknya, terus lanjut pelan-pelan.
+            Kalo Udah, Boleh Lanjut Kok..
           </div>
 
           <div class="actions">
             <button class="btn secondary" data-go="0">Balik</button>
+            <button class="btn primary" id="musicBtn">▶︎ Play Musik</button>
             <button class="btn primary" data-go="2">Lanjut</button>
           </div>
         </div>
@@ -461,12 +411,12 @@
 
       <section class="card" data-slide="2">
         <div class="card-inner">
-          <h1>Tiup kuenya 🎂</h1>
-          <p>Cukup tap kuenya buat “matiin lilin”. Kalau mau gaya-gayaan, bisa coba sensor tiup juga.</p>
+          <h1>Tiup kuenya!!! 🎂</h1>
+          <p>Sampe Lilin nya Mati Yaaa</p>
 
           <div class="toggle-row">
             <div class="toggle">
-              <div style="font-weight:800;">Sensor tiup (mic)</div>
+              <div style="font-weight:900;">Sensor tiup (mic)</div>
               <div class="switch" id="micSwitch" role="switch" aria-checked="false">
                 <div class="knob"></div>
               </div>
@@ -478,73 +428,37 @@
             <img class="cake" id="cakeImg" src="assets/cake_on.gif" alt="cake" draggable="false" />
           </div>
 
+          <div class="big-msg" id="cakeHint">
+            Kalo Gabisa di Tiup, di Tap Aja Kue nya
+          </div>
+
           <div class="actions">
             <button class="btn secondary" data-go="1">Balik</button>
-            <button class="btn primary" data-go="3">Lanjut</button>
+            <button class="btn primary" id="cakeNextBtn" disabled style="opacity:.55;">Lanjut</button>
           </div>
         </div>
       </section>
 
       <section class="card" data-slide="3">
         <div class="card-inner">
-          <h1>Kenangan kecil 📸</h1>
-          <p>Ini tempat foto-foto kamu. Lu tinggal ganti file-nya di folder assets.</p>
-
-          <div class="grid">
-            <div class="ph"><img src="assets/photos/1.jpg" alt="photo1" /></div>
-            <div class="ph"><img src="assets/photos/2.jpg" alt="photo2" /></div>
-            <div class="ph"><img src="assets/photos/3.jpg" alt="photo3" /></div>
-            <div class="ph"><img src="assets/photos/4.jpg" alt="photo4" /></div>
-          </div>
+          <h1>Selamat ulang tahun 🎉</h1>
+          <p>Semoga hari ini kamu merasa disayang, bukan cuma diucapin.</p>
 
           <div class="big-msg">
-            Kadang yang bikin kangen itu bukan hal gede, tapi hal kecil yang keinget tiba-tiba.
-            Nah ini salah satu caranya biar “tiba-tiba” itu ada tempatnya.
+            Happy Birthday seiras heartifilia aka fadiaa.
+            semogaa di umur kamu yang bertambah satu tahun inii 
+            kamuu bisa menjadii pribadi yang lebihh baik lagiii,
+            menjadi pribadi yang semakin kuat. terimakasihhh ya seii 
+            karena sudah bertahan sampee hari inii,
+            terimakasih karena selalu milih bertahan dari banyaknya kata
+            ingin menyerah yang mungkin sering sekali terucap atau terpikirkan
+            oleh kamuuu. aku bangga kamu bisaa sampe di titik iniii
+            <br><br>
+            Ulang tahun itu bukan cuma nambah umur, tapi nambah alasan buat bangga kamu masih bertahan.
           </div>
 
           <div class="actions">
             <button class="btn secondary" data-go="2">Balik</button>
-            <button class="btn primary" data-go="4">Lanjut</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" data-slide="4">
-        <div class="card-inner">
-          <h1>Selamat ulang tahun 🎉</h1>
-          <p>Semoga tahun ini kamu makin tenang, makin kuat, dan makin disayang.</p>
-
-          <div class="big-msg">
-            Semoga kamu dapet hal-hal baik yang kamu ga minta, tapi kamu pantas dapet.
-            Semoga kamu ketemu versi hidup yang lebih lembut sama kamu.
-            Dan semoga kalau capek, kamu inget: kamu ga sendirian.
-          </div>
-
-          <div class="actions">
-            <button class="btn secondary" data-go="3">Balik</button>
-            <button class="btn primary" data-go="5">Lanjut</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="card" data-slide="5">
-        <div class="card-inner">
-          <h1>Wish kamu ✨</h1>
-          <p>Tulis harapan kamu. Simpen di sini, bukan cuma disimpen di kepala.</p>
-
-          <div class="wishbox">
-            <input class="input" id="wishInput" placeholder="Tulis wish kamu..." />
-            <div class="save-row">
-              <button class="btn primary" id="saveWishBtn">Simpan</button>
-              <button class="btn secondary" id="clearWishBtn">Hapus</button>
-              <div class="saved" id="savedText"></div>
-            </div>
-          </div>
-
-          <div class="big-msg" id="wishPreview" style="display:none;"></div>
-
-          <div class="actions">
-            <button class="btn secondary" data-go="4">Balik</button>
             <button class="btn primary" data-go="0">Ulang dari awal</button>
           </div>
         </div>
@@ -562,22 +476,23 @@
 
     const bgm = document.getElementById("bgm")
     const musicBtn = document.getElementById("musicBtn")
-    let musicReady = false
 
     const gameArea = document.getElementById("gameArea")
     const butterfly = document.getElementById("butterfly")
     const scoreText = document.getElementById("scoreText")
-    const resetGameBtn = document.getElementById("resetGameBtn")
+    const timeText = document.getElementById("timeText")
+
+    const gameOverlay = document.getElementById("gameOverlay")
+    const gameOverTitle = document.getElementById("gameOverTitle")
+    const gameOverText = document.getElementById("gameOverText")
+    const retryBtn = document.getElementById("retryBtn")
+    const skipBtn = document.getElementById("skipBtn")
 
     const cakeImg = document.getElementById("cakeImg")
     const micSwitch = document.getElementById("micSwitch")
     const micStatus = document.getElementById("micStatus")
-
-    const wishInput = document.getElementById("wishInput")
-    const saveWishBtn = document.getElementById("saveWishBtn")
-    const clearWishBtn = document.getElementById("clearWishBtn")
-    const savedText = document.getElementById("savedText")
-    const wishPreview = document.getElementById("wishPreview")
+    const cakeNextBtn = document.getElementById("cakeNextBtn")
+    const cakeHint = document.getElementById("cakeHint")
 
     let current = 0
 
@@ -598,6 +513,7 @@
         else s.classList.remove("fade-in")
       })
       buildProgress()
+      onSlideEnter(i)
     }
 
     function go(i) {
@@ -618,35 +534,31 @@
       try {
         if (bgm.paused) {
           await bgm.play()
-          musicReady = true
-          musicBtn.textContent = "⏸"
+          musicBtn.textContent = "⏸ Pause Musik"
         } else {
           bgm.pause()
-          musicBtn.textContent = "▶︎"
+          musicBtn.textContent = "▶︎ Play Musik"
         }
       } catch {
-        musicBtn.textContent = "▶︎"
+        musicBtn.textContent = "▶︎ Play Musik"
       }
     }
+    if (musicBtn) musicBtn.addEventListener("click", toggleMusic)
 
-    musicBtn.addEventListener("click", toggleMusic)
+    function rand(min, max) { return Math.random() * (max - min) + min }
 
     let score = 0
+    let timeLeft = 25
     let moveTimer = null
+    let countdownTimer = null
+    let gameRunning = false
+    let gameEnded = false
 
-    function clamp(n, min, max) {
-      return Math.max(min, Math.min(max, n))
-    }
-
-    function rand(min, max) {
-      return Math.random() * (max - min) + min
-    }
-
-    function moveButterfly(force) {
+    function moveButterfly() {
       const w = gameArea.clientWidth
       const h = gameArea.clientHeight
-      const bw = butterfly.clientWidth || 84
-      const bh = butterfly.clientHeight || 84
+      const bw = butterfly.clientWidth || 86
+      const bh = butterfly.clientHeight || 86
 
       const x = rand(10, w - bw - 10)
       const y = rand(10, h - bh - 10)
@@ -655,41 +567,105 @@
       const flip = Math.random() < 0.5 ? -1 : 1
       butterfly.style.left = x + "px"
       butterfly.style.top = y + "px"
-      butterfly.style.transform = `scaleX(${flip}) rotate(${rot}deg)` + (force ? " scale(1)" : "")
+      butterfly.style.transform = `scaleX(${flip}) rotate(${rot}deg)`
+    }
+
+    function updateHud() {
+      scoreText.textContent = `${score}/10`
+      timeText.textContent = String(timeLeft)
+    }
+
+    function stopGame() {
+      gameRunning = false
+      clearInterval(moveTimer)
+      clearInterval(countdownTimer)
+      moveTimer = null
+      countdownTimer = null
+    }
+
+    function showOverlay(title, text) {
+      gameOverTitle.textContent = title
+      gameOverText.textContent = text
+      gameOverlay.classList.add("show")
+    }
+
+    function hideOverlay() {
+      gameOverlay.classList.remove("show")
+    }
+
+    function endGame(success) {
+      if (gameEnded) return
+      gameEnded = true
+      stopGame()
+      if (success) {
+        hideOverlay()
+        setTimeout(() => go(1), 350)
+      } else {
+        showOverlay("Waktu habis ⏱️", `Skor kamu ${score}/10. Ulangi dulu ya.`)
+      }
     }
 
     function startGame() {
-      clearInterval(moveTimer)
-      moveButterfly(true)
-      moveTimer = setInterval(() => moveButterfly(false), 1100)
+      stopGame()
+      hideOverlay()
+      score = 0
+      timeLeft = 25
+      gameRunning = true
+      gameEnded = false
+      updateHud()
+      moveButterfly()
+
+      moveTimer = setInterval(() => {
+        if (!gameRunning) return
+        moveButterfly()
+      }, 650)
+
+      countdownTimer = setInterval(() => {
+        if (!gameRunning) return
+        timeLeft -= 1
+        updateHud()
+        if (timeLeft <= 0) endGame(false)
+      }, 1000)
     }
 
     butterfly.addEventListener("click", () => {
-      score++
-      scoreText.textContent = score
-      butterfly.style.transition = "transform .12s"
-      butterfly.style.transform += " scale(0.75)"
+      if (!gameRunning || gameEnded) return
+      score += 1
+      updateHud()
+      butterfly.style.transition = "transform .10s"
+      butterfly.style.transform += " scale(0.78)"
       setTimeout(() => {
         butterfly.style.transition = ""
-        moveButterfly(true)
-      }, 140)
+        moveButterfly()
+      }, 110)
+      if (score >= 10) endGame(true)
     })
 
-    resetGameBtn.addEventListener("click", () => {
-      score = 0
-      scoreText.textContent = score
-      startGame()
+    retryBtn.addEventListener("click", () => startGame())
+    skipBtn.addEventListener("click", () => {
+      hideOverlay()
+      go(1)
     })
 
     let candlesOn = true
     function setCandles(on) {
       candlesOn = on
       cakeImg.src = on ? "assets/cake_on.gif" : "assets/cake_off.png"
+      if (!on) {
+        cakeNextBtn.disabled = false
+        cakeNextBtn.style.opacity = "1"
+        cakeHint.textContent = "Lilin udah mati. Sekarang lanjut."
+      }
     }
 
     cakeImg.addEventListener("click", () => {
+      if (!candlesOn) return
       setCandles(false)
-      setTimeout(() => setCandles(true), 1200)
+    })
+
+    cakeNextBtn.addEventListener("click", () => {
+      if (candlesOn) return
+      go(3)
     })
 
     let micOn = false
@@ -722,82 +698,63 @@
       try {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true })
         audioCtx = new (window.AudioContext || window.webkitAudioContext)()
-        const source = audioCtx.createMediaStreamSource(micStream)
+        const src = audioCtx.createMediaStreamSource(micStream)
         analyser = audioCtx.createAnalyser()
-        analyser.fftSize = 2048
-        source.connect(analyser)
+        analyser.fftSize = 1024
+        src.connect(analyser)
         micOn = true
         setSwitch(true)
-        watchBlow()
+        listenBlow()
       } catch {
-        await stopMic()
+        stopMic()
       }
     }
 
-    function watchBlow() {
-      if (!analyser) return
+    function rms(buf) {
+      let sum = 0
+      for (let i = 0; i < buf.length; i++) {
+        const v = (buf[i] - 128) / 128
+        sum += v * v
+      }
+      return Math.sqrt(sum / buf.length)
+    }
+
+    function listenBlow() {
+      if (!analyser || !micOn) return
       const data = new Uint8Array(analyser.fftSize)
       const tick = () => {
+        if (!analyser || !micOn) return
         analyser.getByteTimeDomainData(data)
-        let sum = 0
-        for (let i = 0; i < data.length; i++) {
-          const v = (data[i] - 128) / 128
-          sum += v * v
-        }
-        const rms = Math.sqrt(sum / data.length)
-        if (rms > 0.22 && candlesOn) {
+        const level = rms(data)
+        if (candlesOn && level > 0.20) {
           setCandles(false)
-          setTimeout(() => setCandles(true), 1300)
+          stopMic()
+          ret
+        return
         }
         micRAF = requestAnimationFrame(tick)
       }
-      tick()
+      micRAF = requestAnimationFrame(tick)
     }
 
-    micSwitch.addEventListener("click", async () => {
-      if (micOn) await stopMic()
-      else await startMic()
+    micSwitch.addEventListener("click", () => {
+      if (!micOn) startMic()
+      else stopMic()
     })
 
-    function loadWish() {
-      const v = localStorage.getItem("wish_text") || ""
-      if (v.trim()) {
-        wishPreview.style.display = "block"
-        wishPreview.textContent = "Wish kamu: " + v
-        savedText.textContent = "Tersimpan ✅"
-        wishInput.value = v
-      } else {
-        wishPreview.style.display = "none"
-        savedText.textContent = ""
-        wishInput.value = ""
+    function onSlideEnter(i) {
+      if (i === 0) startGame()
+      else stopGame()
+
+      if (i !== 2) stopMic()
+
+      if (i === 2) {
+        cakeNextBtn.disabled = candlesOn
+        cakeNextBtn.style.opacity = candlesOn ? ".55" : "1"
       }
     }
 
-    saveWishBtn.addEventListener("click", () => {
-      const v = (wishInput.value || "").trim()
-      localStorage.setItem("wish_text", v)
-      loadWish()
-    })
-
-    clearWishBtn.addEventListener("click", () => {
-      localStorage.removeItem("wish_text")
-      loadWish()
-    })
-
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) return
-      if (!bgm.paused && musicReady) {
-        bgm.play().catch(() => {})
-      }
-    })
-
-    window.addEventListener("resize", () => moveButterfly(true))
-
-    showSlide(0)
-    startGame()
-    loadWish()
-    setCandles(true)
-    setSwitch(false)
+    go(0)
   </script>
 </body>
 </html>
