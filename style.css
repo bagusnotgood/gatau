@@ -26,8 +26,6 @@ h1{
   margin-bottom:10px;
 }
 
-p{color:#555}
-
 button{
   padding:12px 26px;
   border:none;
@@ -35,12 +33,15 @@ button{
   background:#ff5da2;
   color:white;
   font-size:16px;
-  margin-top:25px;
+  margin-top:20px;
 }
 
-img{
-  max-width:80%;
-  border-radius:20px;
+/* MUSIC PLAYER */
+#musicPlayer{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:999;
 }
 
 /* GAME */
@@ -50,17 +51,26 @@ img{
   background:#fff0f7;
   border-radius:20px;
   position:relative;
+  overflow:hidden;
 }
 
-#bird{
-  width:80px;
+.butterfly{
+  width:60px;
   position:absolute;
   cursor:pointer;
 }
 
-#timer{
-  font-weight:bold;
-  margin:10px;
+/* DECOR EMOJI */
+.emoji{
+  position:absolute;
+  font-size:24px;
+  animation:fall 6s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes fall{
+  from{top:-30px}
+  to{top:110vh}
 }
 
 /* SPOTIFY */
@@ -72,36 +82,9 @@ img{
   width:300px;
 }
 
-.spotify img{
-  border-radius:12px;
-  margin-bottom:10px;
-}
-
-/* BUTTERFLY */
-.butterfly{
-  position:absolute;
-  width:40px;
-  animation:fly 12s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes fly{
-  from{transform:translateX(-60px)}
-  to{transform:translateX(110vw)}
-}
-
-/* FINAL TEXT */
+/* FINAL */
 #finalText{
   max-height:60vh;
   overflow-y:auto;
   line-height:1.8;
-}
-
-.word{
-  opacity:0;
-  animation:show .3s forwards;
-}
-
-@keyframes show{
-  to{opacity:1}
 }

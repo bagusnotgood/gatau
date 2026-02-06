@@ -1,96 +1,106 @@
+
+/* SLIDE */
 let slide = 1;
 const total = 7;
-const bgm = document.getElementById('bgm');
-
 function show(n){
   document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
   document.getElementById('s'+n).classList.add('active');
   slide = n;
 }
+function next(){ if(slide < total) show(slide+1); }
 
-function next(){
-  if(slide < total) show(slide + 1);
-}
+/* MUSIC */
+const bgm = document.getElementById('bgm');
+const playBtn = document.getElementById('playBtn');
+let playing = false;
 
-/* BUTTERFLY */
-setInterval(()=>{
-  const b = document.createElement('img');
-  b.src = "assets/butterfly.png";
-  b.className = "butterfly";
-  b.style.top = Math.random()*80 + "%";
-  document.body.appendChild(b);
-  setTimeout(()=>b.remove(),12000);
-},3000);
-
-/* GAME */
-let time = 30;
-const bird = document.getElementById('bird');
-
-function moveBird(){
-  bird.style.left = Math.random()*80 + "%";
-  bird.style.top = Math.random()*80 + "%";
-}
-moveBird();
-
-const timer = setInterval(()=>{
-  time--;
-  document.getElementById('timer').innerText = time;
-  moveBird();
-  if(time <= 0) location.reload();
-},1000);
-
-bird.onclick = ()=>{
-  clearInterval(timer);
-  bgm.play();
-  show(2);
+playBtn.onclick = ()=>{
+  if(!playing){
+    bgm.play();
+    playBtn.innerText = "⏸ Pause Music";
+  }else{
+    bgm.pause();
+    playBtn.innerText = "▶️ Play Music";
+  }
+  playing = !playing;
 };
 
-/* MIC & CAKE */
-let cakeDone = false;
-const cake = document.getElementById('cake');
+/* EMOJI DECOR */
+const emojis = ["🎈","🎉","💖","✨","🌸"];
+setInterval(()=>{
+  const e = document.createElement("div");
+  e.className = "emoji";
+  e.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+  e.style.left = Math.random()*100+"vw";
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),6000);
+},800);
 
-cake.onclick = blow;
+/* GAME LOGIC */
+let time = 30;
+let score = 0;
+const timerEl = document.getElementById("timer");
+const scoreEl = document.getElementById("score");
+const gameArea = document.getElementById("gameArea");
 
-navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-  const ctx = new AudioContext();
-  const analyser = ctx.createAnalyser();
-  const mic = ctx.createMediaStreamSource(stream);
-  mic.connect(analyser);
+function spawnButterfly(){
+  const b = document.createElement("img");
+  b.src = "assets/butterfly.png";
+  b.className = "butterfly";
+  b.style.left = Math.random()*85+"%";
+  b.style.top = Math.random()*85+"%";
+  gameArea.appendChild(b);
 
-  const data = new Uint8Array(analyser.frequencyBinCount);
+  b.onclick = ()=>{
+    b.remove();
+    score++;
+    scoreEl.innerText = score;
+    if(score >= 10){
+      clearInterval(gameTimer);
+      show(2);
+    }
+  };
 
-  function detect(){
-    analyser.getByteFrequencyData(data);
-    let vol = data.reduce((a,b)=>a+b)/data.length;
-    if(vol > 40 && slide === 3) blow();
-    requestAnimationFrame(detect);
-  }
-  detect();
-});
-
-function blow(){
-  if(cakeDone) return;
-  cakeDone = true;
-  cake.src = "assets/cake_on.gif";
-  setTimeout(()=>show(4),2000);
+  setTimeout(()=>b.remove(),2000);
 }
 
+const gameTimer = setInterval(()=>{
+  time--;
+  timerEl.innerText = time;
+  spawnButterfly();
+
+  if(time <= 0 && score < 10){
+    location.reload(); // ulang game
+  }
+},1000);
+
+/* CAKE */
+const cake = document.getElementById("cake");
+let done = false;
+cake.onclick = ()=>{
+  if(done) return;
+  done = true;
+  cake.src = "assets/cake_on.gif";
+  setTimeout(()=>show(4),2000);
+};
+
 /* FINAL TEXT */
-const text = `Sei, di hari ulang tahunmu ini,
-aku cuma ingin kamu tahu satu hal penting.
-Kamu itu berharga, kamu itu berarti,
-dan kehadiran kamu selalu membawa rasa hangat.
+const text = `Sei, semoga di usia baru ini,
+kamu selalu dikelilingi hal-hal baik,
+orang-orang tulus,
+dan mimpi-mimpi yang perlahan jadi nyata.
 
-Semoga langkahmu selalu dipermudah,
-hatimu selalu dikuatkan,
-dan setiap lelahmu diganti
-dengan kebahagiaan yang tulus. 💖`;
+Tetap jadi kamu yang hangat,
+yang lembut,
+dan yang selalu pantas
+mendapatkan bahagia. 💖`;
 
-const box = document.getElementById('finalText');
+const box = document.getElementById("finalText");
 text.split(" ").forEach((w,i)=>{
-  const span = document.createElement('span');
+  const span = document.createElement("span");
   span.innerText = w + " ";
-  span.className = "word";
-  span.style.animationDelay = i*0.1 + "s";
+  span.style.opacity = 0;
+  span.style.animation = `show .3s forwards`;
+  span.style.animationDelay = i*0.1+"s";
   box.appendChild(span);
 });

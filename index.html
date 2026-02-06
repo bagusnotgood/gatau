@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Happy Birthday Sei 🎂</title>
+<title>Happy Birthday Sei</title>
 
 <link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;500&display=swap" rel="stylesheet">
@@ -12,53 +11,57 @@
 
 <body>
 
-<!-- SLIDE 1 : GAME -->
-<div class="slide active" id="s1">
-  <h1>Hai cantik Sei 💕</h1>
-  <p>Tap burungnya sebelum waktunya habis ya</p>
-  <div id="timer">30</div>
-  <div id="gameArea">
-    <img src="assets/butterfly.png" id="bird">
-  </div>
+<!-- MUSIC CONTROLLER (GLOBAL, TIDAK HILANG) -->
+<div id="musicPlayer">
+  <button id="playBtn">▶️ Play Music</button>
 </div>
 
-<!-- SLIDE 2 : MUSIC -->
+<!-- SLIDE 1 GAME -->
+<div class="slide active" id="s1">
+  <h1>Tangkap 10 Kupu-kupu 🦋</h1>
+  <p>Waktu: <span id="timer">30</span> detik</p>
+  <p>Skor: <span id="score">0</span> / 10</p>
+
+  <div id="gameArea"></div>
+</div>
+
+<!-- SLIDE 2 MUSIC -->
 <div class="slide" id="s2">
   <div class="spotify">
     <img src="assets/spotify.jpg">
-    <h3>Special for Sei</h3>
-    <p>Now Playing 🎶</p>
+    <h3>Special Song For Sei</h3>
+    <p>Tekan play kalau belum 🎶</p>
   </div>
   <button onclick="next()">Next</button>
 </div>
 
-<!-- SLIDE 3 : CAKE -->
+<!-- SLIDE 3 CAKE -->
 <div class="slide" id="s3">
   <h1>Sebelum lanjut…</h1>
   <p>Tiup lilinnya dulu ya 🎂</p>
   <img src="assets/cake_off.png" id="cake">
 </div>
 
-<!-- SLIDE FOTO -->
+<!-- FOTO -->
 <div class="slide" id="s4">
   <img src="assets/foto1.jpg">
-  <p>Kamu itu sederhana tapi selalu bikin nyaman 🤍</p>
+  <p>Kamu selalu punya cara bikin hari jadi lebih hangat 🤍</p>
   <button onclick="next()">Next</button>
 </div>
 
 <div class="slide" id="s5">
   <img src="assets/foto2.jpg">
-  <p>Ada banyak hal baik yang pantas kamu dapatkan ✨</p>
+  <p>Semoga semua doa baikmu pelan-pelan terwujud ✨</p>
   <button onclick="next()">Next</button>
 </div>
 
 <div class="slide" id="s6">
   <img src="assets/foto3.jpg">
-  <p>Semoga hari-hari kamu selalu penuh senyum 🌷</p>
+  <p>Terima kasih sudah hadir di dunia ini 🌷</p>
   <button onclick="next()">Next</button>
 </div>
 
-<!-- SLIDE FINAL -->
+<!-- FINAL -->
 <div class="slide" id="s7">
   <h1>HAPPY BIRTHDAY SEI 🎉</h1>
   <div id="finalText"></div>
