@@ -474,3 +474,6 @@ body{
   margin:0 6px 12px;
   font-size:14px;
 }
+
+.modal{ pointer-events:auto !important; }
+.modal-card, .modal-card *{ pointer-events:auto !important; }

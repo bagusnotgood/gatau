@@ -76,6 +76,14 @@ modal.addEventListener("click", (e)=>{
   if(e.target === modal) closeModal()
 })
 
+modalBtn.addEventListener("click", (e)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  closeModal()
+  setSlide(0)
+  startGame()
+})
+
 document.addEventListener("click", (e)=>{
   const active = slides[currentSlide]
   const card = active.querySelector(".card")
@@ -86,21 +94,21 @@ document.addEventListener("click", (e)=>{
   if(e.target.closest("a")) return
   unlockTo(currentSlide + 1)
   setSlide(currentSlide + 1)
-})
+}, true)
 
 let gameRunning = false
 let gameCaught = 0
-let gameTime = 30
-let gameTimer = null
+let gameEndAt = 0
+let gameRaf = null
 let spawnTimer = null
 let gameStartedOnce = false
 
 function clearGame(){
-  gameArea.innerHTML = ""
-  if(gameTimer) clearInterval(gameTimer)
+  if(gameRaf) cancelAnimationFrame(gameRaf)
+  gameRaf = null
   if(spawnTimer) clearInterval(spawnTimer)
-  gameTimer = null
   spawnTimer = null
+  gameArea.innerHTML = ""
   gameRunning = false
 }
 
@@ -156,14 +164,27 @@ function spawnButterfly(){
   }, 2400)
 }
 
+function tickGame(){
+  if(!gameRunning) return
+  const msLeft = gameEndAt - Date.now()
+  const secLeft = Math.max(0, Math.ceil(msLeft / 1000))
+  timerText.textContent = `${secLeft}`
+  if(msLeft <= 0){
+    loseGame()
+    return
+  }
+  gameRaf = requestAnimationFrame(tickGame)
+}
+
 function startGame(){
   closeModal()
   clearGame()
+
   gameRunning = true
   gameCaught = 0
-  gameTime = 30
-  timerText.textContent = `${gameTime}`
-  caughtText.textContent = `${gameCaught}`
+  caughtText.textContent = "0"
+  gameEndAt = Date.now() + 30000
+  timerText.textContent = "30"
   softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   spawnTimer = setInterval(()=>{
@@ -172,12 +193,7 @@ function startGame(){
     if(Math.random() < 0.25) spawnButterfly()
   }, 520)
 
-  gameTimer = setInterval(()=>{
-    if(!gameRunning) return
-    gameTime--
-    timerText.textContent = `${gameTime}`
-    if(gameTime <= 0) loseGame()
-  }, 1000)
+  gameRaf = requestAnimationFrame(tickGame)
 }
 
 function winGame(){
@@ -194,14 +210,6 @@ function loseGame(){
   softMessage(gameMsg, "Gagal.", "bad")
   openModal("Yah gagal…", "Waktunya habis. Ulang sekali lagi ya.", "Ulangi Game")
 }
-
-modalBtn.addEventListener("click", ()=>{
-  if(currentSlide !== 0){
-    setSlide(0)
-    unlockTo(0)
-  }
-  startGame()
-})
 
 playBtn.addEventListener("click", async ()=>{
   try{
@@ -370,7 +378,6 @@ function animateLetter(){
     }
     words[idx].classList.add("show")
     idx++
-
     const nearBottom = (letterScroller.scrollHeight - (letterScroller.scrollTop + letterScroller.clientHeight)) < 140
     if(nearBottom) letterScroller.scrollTop = letterScroller.scrollHeight
   }, 70)
