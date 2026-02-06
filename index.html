@@ -1,29 +1,143 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Birthday Sei</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=999">
+  <link rel="stylesheet" href="style.css?v=999" />
 </head>
 <body>
+  <audio id="bgm" src="bgm.mp3" preload="auto" loop></audio>
 
-<div id="app">
-  <section class="card">
-    <h1>🎂 Happy Birthday</h1>
-    <p class="subtitle">Welcome to Sei’s little world</p>
+  <div id="app">
+    <div id="progressDots" class="dots"></div>
 
-    <img src="assets/happy.gif" class="hero">
+    <section class="slide active" data-slide="0">
+      <div class="card">
+        <h1 class="title">🦋 Tangkap Kupu-Kupu</h1>
+        <p class="subtitle">Tangkap <b>10</b> kupu-kupu dalam <b>30 detik</b>. Tidak bisa skip ya, soalnya ini bagian dari “perjalanan” (cie).</p>
 
-    <button id="btn">Click me 💗</button>
-  </section>
-</div>
+        <div class="hud">
+          <div class="pill">⏱ <span id="timerText">30</span>s</div>
+          <div class="pill">🦋 <span id="caughtText">0</span>/10</div>
+        </div>
 
-<script src="script.js"></script>
+        <div id="gameArea" class="game-area" aria-label="Area game"></div>
+
+        <div class="row">
+          <button id="gameStartBtn" class="btn primary">Mulai</button>
+          <button id="gameRetryBtn" class="btn" disabled>Ulangi</button>
+        </div>
+
+        <p id="gameMsg" class="hint"></p>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="1">
+      <div class="card">
+        <h1 class="title">🎶 Music</h1>
+        <img class="spotify" src="assets/spotify.jpg" alt="Spotify" />
+        <div class="row">
+          <button id="playBtn" class="btn primary">Play</button>
+          <button id="tapMusicBtn" class="btn">Tap</button>
+        </div>
+        <p class="hint" id="musicHint">Kalau audio nggak bunyi, itu ulah browser. Manusia cuma jadi korban.</p>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="2">
+      <div class="card">
+        <h1 class="title">🕯 Tiup Lilin</h1>
+        <p class="subtitle">Izinkan mic, tiup lilinnya. Kalau mic-nya drama, tap kuenya aja.</p>
+
+        <div class="cake-wrap">
+          <img id="cakeImg" class="cake" src="assets/cake_on.gif" alt="Cake" />
+          <div id="micStatus" class="mic-status">Menunggu izin microphone…</div>
+
+          <div id="blowMeter" class="meter" hidden>
+            <div id="blowBar" class="bar"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="requestMicBtn" class="btn primary">Izinkan Mic</button>
+          <button id="tapCakeBtn" class="btn">Tap Kue</button>
+        </div>
+
+        <button id="nextAfterCakeBtn" class="btn primary full" disabled>Lanjut</button>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="3">
+      <div class="card">
+        <img class="hero-gif" src="assets/happy.gif" alt="Happy" />
+        <h2 class="title center">Happy Birthday Seira Heartifillia</h2>
+        <button id="happyClickBtn" class="btn primary full">Click</button>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="4">
+      <div class="card">
+        <img class="photo" src="assets/foto1.jpg" alt="Foto 1" />
+        <p class="caption">kadang aku mikir,
+nggak semua orang sadar
+kalau kehadiran mereka itu beneran berarti
+dan kamu salah satunya, sei</p>
+        <button class="btn primary full nextBtn">Lanjut</button>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="5">
+      <div class="card">
+        <img class="photo" src="assets/foto2.jpg" alt="Foto 2" />
+        <p class="caption">ada banyak versi kamu yang sudah lewat sejauh ini
+yang capek, yang ragu, yang kuat diam-diam
+dan semuanya tetap sampai ke hari ini
+
+itu aja sudah cukup buat dihargai</p>
+        <button class="btn primary full nextBtn">Lanjut</button>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="6">
+      <div class="card">
+        <img class="photo" src="assets/foto3.jpg" alt="Foto 3" />
+        <p class="caption">jadi hari ini,
+aku pengin kamu baca ini pelan-pelan tanpa buru-buru, tanpa ngerasa harus apa-apa
+aku cuma pengin bilang sesuatu ke kamu 🤍</p>
+        <button class="btn primary full nextBtn">Lanjut</button>
+      </div>
+    </section>
+
+    <section class="slide" data-slide="7">
+      <div class="card letter-card">
+        <h1 class="title center">HAPPY BIRTHDAY SEIRA HEARTIFILLIA</h1>
+
+        <div class="letter-shell">
+          <div class="letter-top">
+            <span class="badge">💌 surat</span>
+            <span class="badge">scroll pelan ya</span>
+          </div>
+          <div id="letterScroller" class="letter"></div>
+        </div>
+
+        <div class="row">
+          <button id="replayLetterBtn" class="btn">Ulang Animasi</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button id="backBtn" class="navbtn" aria-label="Back">‹</button>
+      <button id="nextBtn" class="navbtn" aria-label="Next">›</button>
+    </div>
+  </div>
+
+  <script src="script.js?v=999"></script>
 </body>
 </html>
