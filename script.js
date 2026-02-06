@@ -1,7 +1,5 @@
 const slides = Array.from(document.querySelectorAll(".slide"))
 const dotsWrap = document.getElementById("progressDots")
-const backBtn = document.getElementById("backBtn")
-const nextBtn = document.getElementById("nextBtn")
 
 const bgm = document.getElementById("bgm")
 const playBtn = document.getElementById("playBtn")
@@ -11,8 +9,6 @@ const musicHint = document.getElementById("musicHint")
 const gameArea = document.getElementById("gameArea")
 const timerText = document.getElementById("timerText")
 const caughtText = document.getElementById("caughtText")
-const gameStartBtn = document.getElementById("gameStartBtn")
-const gameRetryBtn = document.getElementById("gameRetryBtn")
 const gameMsg = document.getElementById("gameMsg")
 
 const requestMicBtn = document.getElementById("requestMicBtn")
@@ -23,11 +19,13 @@ const micStatus = document.getElementById("micStatus")
 const blowMeter = document.getElementById("blowMeter")
 const blowBar = document.getElementById("blowBar")
 
-const happyClickBtn = document.getElementById("happyClickBtn")
-const nextBtns = Array.from(document.querySelectorAll(".nextBtn"))
-
 const letterScroller = document.getElementById("letterScroller")
 const replayLetterBtn = document.getElementById("replayLetterBtn")
+
+const modal = document.getElementById("modal")
+const modalTitle = document.getElementById("modalTitle")
+const modalText = document.getElementById("modalText")
+const modalBtn = document.getElementById("modalBtn")
 
 let currentSlide = 0
 let lockedUntil = 0
@@ -44,14 +42,8 @@ function buildDots(){
 }
 buildDots()
 
-function syncNav(){
-  backBtn.disabled = currentSlide === 0
-  nextBtn.disabled = currentSlide >= lockedUntil || currentSlide === slides.length-1
-}
-
 function unlockTo(i){
   lockedUntil = Math.max(lockedUntil, i)
-  syncNav()
 }
 
 function setSlide(i){
@@ -61,28 +53,47 @@ function setSlide(i){
   currentSlide = i
   slides[currentSlide].classList.add("active")
   Array.from(dotsWrap.children).forEach((d, idx)=> d.classList.toggle("active", idx===currentSlide))
-  syncNav()
   onEnterSlide(currentSlide)
 }
-
-backBtn.addEventListener("click", ()=> setSlide(currentSlide-1))
-nextBtn.addEventListener("click", ()=> setSlide(currentSlide+1))
-
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "ArrowLeft") setSlide(currentSlide-1)
-  if(e.key === "ArrowRight") setSlide(currentSlide+1)
-})
 
 function softMessage(el, text, tone){
   el.textContent = text
   el.style.color = tone === "bad" ? "var(--bad)" : tone === "good" ? "var(--good)" : "var(--muted)"
 }
 
+function openModal(title, text, btnText){
+  modalTitle.textContent = title
+  modalText.textContent = text
+  modalBtn.textContent = btnText || "OK"
+  modal.hidden = false
+}
+
+function closeModal(){
+  modal.hidden = true
+}
+
+modal.addEventListener("click", (e)=>{
+  if(e.target === modal) closeModal()
+})
+
+document.addEventListener("click", (e)=>{
+  const active = slides[currentSlide]
+  const card = active.querySelector(".card")
+  if(!card) return
+  if(card.dataset.tapNext !== "true") return
+  if(modal.hidden === false) return
+  if(e.target.closest("button")) return
+  if(e.target.closest("a")) return
+  unlockTo(currentSlide + 1)
+  setSlide(currentSlide + 1)
+})
+
 let gameRunning = false
 let gameCaught = 0
 let gameTime = 30
 let gameTimer = null
 let spawnTimer = null
+let gameStartedOnce = false
 
 function clearGame(){
   gameArea.innerHTML = ""
@@ -146,15 +157,14 @@ function spawnButterfly(){
 }
 
 function startGame(){
+  closeModal()
   clearGame()
   gameRunning = true
   gameCaught = 0
   gameTime = 30
   timerText.textContent = `${gameTime}`
   caughtText.textContent = `${gameCaught}`
-  softMessage(gameMsg, "Tangkap 10 kupu-kupu ya. Fokus. Jangan panik.", "neutral")
-  gameStartBtn.disabled = true
-  gameRetryBtn.disabled = true
+  softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   spawnTimer = setInterval(()=>{
     if(!gameRunning) return
@@ -173,8 +183,7 @@ function startGame(){
 function winGame(){
   gameRunning = false
   clearGame()
-  softMessage(gameMsg, "Berhasil! Oke, kamu boleh lanjut 💗", "good")
-  gameRetryBtn.disabled = false
+  softMessage(gameMsg, "Berhasil! Lanjut 🎀", "good")
   unlockTo(1)
   setTimeout(()=> setSlide(1), 650)
 }
@@ -182,13 +191,17 @@ function winGame(){
 function loseGame(){
   gameRunning = false
   clearGame()
-  softMessage(gameMsg, "Gagal. Ulang ya. Kupu-kupunya licik banget soalnya.", "bad")
-  gameStartBtn.disabled = false
-  gameRetryBtn.disabled = false
+  softMessage(gameMsg, "Gagal.", "bad")
+  openModal("Yah gagal…", "Waktunya habis. Ulang sekali lagi ya.", "Ulangi Game")
 }
 
-gameStartBtn.addEventListener("click", startGame)
-gameRetryBtn.addEventListener("click", startGame)
+modalBtn.addEventListener("click", ()=>{
+  if(currentSlide !== 0){
+    setSlide(0)
+    unlockTo(0)
+  }
+  startGame()
+})
 
 playBtn.addEventListener("click", async ()=>{
   try{
@@ -200,7 +213,7 @@ playBtn.addEventListener("click", async ()=>{
       playBtn.textContent = "Play"
     }
   }catch{
-    musicHint.textContent = "Audio diblokir. Tap Play lagi (iya, browser sok ngatur)."
+    musicHint.textContent = "Audio diblokir. Tap Play lagi (browser sok ngatur)."
     musicHint.style.color = "var(--bad)"
   }
 })
@@ -238,7 +251,7 @@ function extinguishCake(reason){
   blown = true
   cakeImg.src = "assets/cake_off.png"
   nextAfterCakeBtn.disabled = false
-  micStatus.textContent = reason === "mic" ? "Yay! Lilinnya mati karena tiupan kamu 💨" : "Oke! Lilinnya mati karena kamu tap 🎀"
+  micStatus.textContent = reason === "mic" ? "Yay! Lilinnya mati karena tiupan kamu 💨" : "Oke! Lilinnya mati karena tap 🎀"
   micStatus.style.color = "var(--good)"
   blowBar.style.width = "0%"
   stopMic()
@@ -276,11 +289,8 @@ async function requestMic(){
       const pct = Math.round(raw * 100)
       blowBar.style.width = `${pct}%`
 
-      if(raw > 0.70){
-        blowStable++
-      }else{
-        blowStable = Math.max(0, blowStable-1)
-      }
+      if(raw > 0.70) blowStable++
+      else blowStable = Math.max(0, blowStable-1)
 
       if(blowStable >= 10){
         extinguishCake("mic")
@@ -292,7 +302,7 @@ async function requestMic(){
 
     rafId = requestAnimationFrame(tick)
   }catch{
-    micStatus.textContent = "Izin mic ditolak / nggak tersedia. Gapapa, tap kuenya aja."
+    micStatus.textContent = "Izin mic ditolak / nggak tersedia. Tap kuenya aja ya."
     micStatus.style.color = "var(--bad)"
     blowMeter.hidden = true
     stopMic()
@@ -306,18 +316,6 @@ cakeImg.addEventListener("click", ()=> extinguishCake("tap"))
 nextAfterCakeBtn.addEventListener("click", ()=>{
   unlockTo(3)
   setSlide(3)
-})
-
-happyClickBtn.addEventListener("click", ()=>{
-  unlockTo(4)
-  setSlide(4)
-})
-
-nextBtns.forEach(btn=>{
-  btn.addEventListener("click", ()=>{
-    unlockTo(currentSlide+1)
-    setSlide(currentSlide+1)
-  })
 })
 
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
@@ -374,9 +372,7 @@ function animateLetter(){
     idx++
 
     const nearBottom = (letterScroller.scrollHeight - (letterScroller.scrollTop + letterScroller.clientHeight)) < 140
-    if(nearBottom){
-      letterScroller.scrollTop = letterScroller.scrollHeight
-    }
+    if(nearBottom) letterScroller.scrollTop = letterScroller.scrollHeight
   }, 70)
 }
 
@@ -384,6 +380,16 @@ replayLetterBtn.addEventListener("click", animateLetter)
 
 function onEnterSlide(i){
   if(i !== 2) stopMic()
+
+  if(i === 0){
+    if(!gameStartedOnce){
+      gameStartedOnce = true
+      unlockTo(0)
+      setTimeout(startGame, 200)
+    }else{
+      setTimeout(startGame, 150)
+    }
+  }
 
   if(i === 2){
     blown = false
