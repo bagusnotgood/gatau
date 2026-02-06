@@ -407,3 +407,23 @@ body{
   .title{font-size:22px}
   .letter{font-size:17px}
 }
+
+.card::before,
+.card::after,
+#app::before{
+  pointer-events: none !important;
+}
+
+.card{
+  position: relative;
+}
+
+.card::before,
+.card::after{
+  z-index: 0;
+}
+
+.card > *{
+  position: relative;
+  z-index: 1;
+}
