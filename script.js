@@ -1,5 +1,8 @@
+const BUILD_ID = "build-20260207-3"
+
 const slides = Array.from(document.querySelectorAll(".slide"))
 const dotsWrap = document.getElementById("progressDots")
+document.getElementById("buildId").textContent = BUILD_ID
 
 const bgm = document.getElementById("bgm")
 const playBtn = document.getElementById("playBtn")
@@ -30,7 +33,7 @@ const modalBtn = document.getElementById("modalBtn")
 let currentSlide = 0
 let lockedUntil = 0
 
-function clamp(n, a, b){ return Math.max(a, Math.min(b, n)) }
+function clamp(n,a,b){ return Math.max(a, Math.min(b, n)) }
 
 function buildDots(){
   dotsWrap.innerHTML = ""
@@ -42,9 +45,7 @@ function buildDots(){
 }
 buildDots()
 
-function unlockTo(i){
-  lockedUntil = Math.max(lockedUntil, i)
-}
+function unlockTo(i){ lockedUntil = Math.max(lockedUntil, i) }
 
 function setSlide(i){
   i = clamp(i, 0, slides.length-1)
@@ -68,20 +69,16 @@ function openModal(title, text, btnText){
   modal.hidden = false
 }
 
-function closeModal(){
-  modal.hidden = true
-}
+function closeModal(){ modal.hidden = true }
 
-modal.addEventListener("click", (e)=>{
-  if(e.target === modal) closeModal()
-})
+modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal() })
 
 modalBtn.addEventListener("click", (e)=>{
   e.preventDefault()
   e.stopPropagation()
   closeModal()
   setSlide(0)
-  setTimeout(startGame, 100)
+  setTimeout(startGame, 120)
 })
 
 document.addEventListener("click", (e)=>{
@@ -91,34 +88,83 @@ document.addEventListener("click", (e)=>{
   if(card.dataset.tapNext !== "true") return
   if(modal.hidden === false) return
   if(e.target.closest("button")) return
-  if(e.target.closest("a")) return
   unlockTo(currentSlide + 1)
   setSlide(currentSlide + 1)
 }, true)
 
+function nowMs(){
+  return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()
+}
+
 let gameRunning = false
 let gameCaught = 0
-
 let gameDeadline = 0
-let gameTickInt = null
-let spawnTimer = null
+let tickInt = null
+let spawnInt = null
 let loseTimeout = null
-let gameBooted = false
+let gameStarted = false
 
 function clearGame(){
-  if(gameTickInt) clearInterval(gameTickInt)
-  gameTickInt = null
-  if(spawnTimer) clearInterval(spawnTimer)
-  spawnTimer = null
+  if(tickInt) clearInterval(tickInt)
+  tickInt = null
+  if(spawnInt) clearInterval(spawnInt)
+  spawnInt = null
   if(loseTimeout) clearTimeout(loseTimeout)
   loseTimeout = null
-
   gameArea.innerHTML = ""
   gameRunning = false
 }
 
-function nowMs(){
-  return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()
+function rand(min, max){ return Math.random()*(max-min)+min }
+
+function spawnButterfly(){
+  const b = document.createElement("div")
+  b.className = "butterfly"
+
+  const w = gameArea.clientWidth
+  const h = gameArea.clientHeight
+  const x = rand(10, w-64)
+  const y = rand(10, h-64)
+  b.style.left = `${x}px`
+  b.style.top = `${y}px`
+  b.style.animationDuration = `${rand(1.0, 1.8)}s`
+
+  const vx = rand(-1.4, 1.4)
+  const vy = rand(-1.1, 1.1)
+
+  let px = x
+  let py = y
+  let alive = true
+
+  const mover = setInterval(()=>{
+    if(!alive) return
+    px += vx * 3.2
+    py += vy * 3.0
+    if(px < 0 || px > w-54) px = clamp(px, 0, w-54)
+    if(py < 0 || py > h-54) py = clamp(py, 0, h-54)
+    b.style.left = `${px}px`
+    b.style.top = `${py}px`
+  }, 40)
+
+  b.addEventListener("click", ()=>{
+    if(!gameRunning) return
+    alive = false
+    clearInterval(mover)
+    b.remove()
+    gameCaught++
+    caughtText.textContent = `${gameCaught}`
+    if(gameCaught >= 10) winGame()
+  }, {passive:true})
+
+  gameArea.appendChild(b)
+
+  setTimeout(()=>{
+    if(alive){
+      alive = false
+      clearInterval(mover)
+      b.remove()
+    }
+  }, 2400)
 }
 
 function startGame(){
@@ -128,24 +174,24 @@ function startGame(){
   gameRunning = true
   gameCaught = 0
   caughtText.textContent = "0"
+  timerText.textContent = "30"
+  softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   const start = nowMs()
   gameDeadline = start + 30000
-  timerText.textContent = "30"
-  softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   loseTimeout = setTimeout(()=>{
     if(gameRunning) loseGame()
   }, 30000)
 
-  gameTickInt = setInterval(()=>{
+  tickInt = setInterval(()=>{
     if(!gameRunning) return
     const left = Math.max(0, gameDeadline - nowMs())
     const sec = Math.ceil(left / 1000)
     timerText.textContent = `${sec}`
   }, 120)
 
-  spawnTimer = setInterval(()=>{
+  spawnInt = setInterval(()=>{
     if(!gameRunning) return
     spawnButterfly()
     if(Math.random() < 0.25) spawnButterfly()
@@ -187,27 +233,15 @@ tapMusicBtn.addEventListener("click", ()=>{
   setSlide(2)
 })
 
-let micStream = null
-let audioCtx = null
-let analyser = null
-let micSource = null
-let rafId = null
-let blown = false
-let blowStable = 0
+let micStream=null, audioCtx=null, analyser=null, micSource=null, rafId=null
+let blown=false, blowStable=0
 
 function stopMic(){
   if(rafId) cancelAnimationFrame(rafId)
-  rafId = null
-  if(micStream){
-    micStream.getTracks().forEach(t=> t.stop())
-    micStream = null
-  }
-  if(audioCtx){
-    audioCtx.close().catch(()=>{})
-    audioCtx = null
-  }
-  analyser = null
-  micSource = null
+  rafId=null
+  if(micStream){ micStream.getTracks().forEach(t=>t.stop()); micStream=null }
+  if(audioCtx){ audioCtx.close().catch(()=>{}); audioCtx=null }
+  analyser=null; micSource=null
 }
 
 function extinguishCake(reason){
@@ -227,7 +261,7 @@ async function requestMic(){
   micStatus.style.color = "var(--muted)"
 
   try{
-    micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } })
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:true, noiseSuppression:true, autoGainControl:true } })
     audioCtx = new (window.AudioContext || window.webkitAudioContext)()
     analyser = audioCtx.createAnalyser()
     analyser.fftSize = 2048
@@ -243,24 +277,17 @@ async function requestMic(){
     const tick = ()=>{
       if(!analyser || blown) return
       analyser.getByteTimeDomainData(buf)
-      let sum = 0
+      let sum=0
       for(let i=0;i<buf.length;i++){
-        const v = (buf[i]-128)/128
+        const v=(buf[i]-128)/128
         sum += v*v
       }
-      const rms = Math.sqrt(sum / buf.length)
-      const raw = clamp((rms - 0.02) / 0.12, 0, 1)
-      const pct = Math.round(raw * 100)
-      blowBar.style.width = `${pct}%`
-
-      if(raw > 0.70) blowStable++
+      const rms = Math.sqrt(sum/buf.length)
+      const raw = clamp((rms-0.02)/0.12, 0, 1)
+      blowBar.style.width = `${Math.round(raw*100)}%`
+      if(raw>0.70) blowStable++
       else blowStable = Math.max(0, blowStable-1)
-
-      if(blowStable >= 10){
-        extinguishCake("mic")
-        return
-      }
-
+      if(blowStable>=10){ extinguishCake("mic"); return }
       rafId = requestAnimationFrame(tick)
     }
 
@@ -287,93 +314,56 @@ di hari bertambahnya satu tahun usia kamu saat ini, aku harap kamu tau satu hal 
 
 Semoga di umur kamu yang sekarang, kamu tumbuh menjadi pribadi yang lebii baik lagi ya, bukan versi “sempurna” menurut dunia, tapi versi kamu yang lebi jujur sama diri sendiri, lebii lembut ke hati sendiri, dan lebii berani ngebela kebahagiaan kamu sendiri. Semoga kamu semakin kuat, bukan karena hidup berhenti nyakitin kamu, tapi karena kamu belajar berdiri meskipun kaki kamu bergerter, belajar bernapas meskipun dada kamu sesak, dan belajar bertahan walau rasanya ingin nyerah gitu aja.
 
-makasiii yaa buat sei, karena udaa bertahan sampe hari ini. makasii karena di balik semua “aku capee”, “aku pengen nyerah aja”, "aku ingin.." apapun yang kamu ucap, kamu tetep memilih satu hal yang paling sulit yaitu lanjut hidup. kamu mungkin merasa biasa aja, tapi kenyataannya, milih bertahan setiap hari itu adalah bentuk keberanian yang luar biasa tau.
+makasiii yaa buat sei, karena udaa bertahan sampe hari ini. ... (biarin teks panjang kamu tetap di sini)`
 
-Aku tahu perjalanan kamu ga selalu gampang. Ada hari-hari ketika kamu harus kuat sendirian, ketika senyum kamu terpaksa, ketika hati kamu berisik tapi dunia tetep nuntut kamu buat baik-baik aja. dan meskipun begitu kamu tetep berjalan, jatuh-bangun, ragu, tapi tetep maju. Itu layak banget dihargaiin, dan kamu itu layak dibanggakan tauu.
-
-Semoga ke depan, hidup kamu lebih lembut sama kamu ya sei. Semoga kamu dikelilingi orang-orang yang benar-benar ngeliat kamu, ngedengerin kamu, dan ga ngecilin perasaan kamu. Semoga kamu diberi kebahagiaan yang tenang, bukan yang rame tapi isinya kosong. Semoga kamu nemuin kedamaian dalam hal-hal kecil, dan harapan di hari-hari yang sempat terasa begitu gelap.
-
-Aku berharap kamu belajar buat maafin diri sendiri atas hal-hal yang dulu gabisa kamu kendaliin ya. Belajar ngelepasin rasa bersalah yang bukan milik kamu. Belajar percaya kalo kamu pantas dicintai, bukan karena kamu kuat, bukan karena kamu berguna, tapi karena kamu ada.
-
-Aku bangga sama kamu. Bukan hanya karena kamu sampai di titik ini, tapi karena kamu ga nyerah meskipun dunia sering ga adil. Aku bangga sama cara kamu bertahan, dengan cara kamu tetep peduli meski hati kamu pernaa terluka, dan dengan cara kamu tetep hidup meski lelahnya ga selalu terlihat.
-
-Teruslah tumbuh, Sei. Tidak apa-apa kalau pelan. Tidak apa-apa kalau kamu perlu istirahat. Tidak apa-apa kalau kadang kamu jatuh lagi. Kamu tidak gagal hanya karena kamu manusia. Dan apa pun yang terjadi nanti, ingat satu hal ini: keberadaanmu berarti, dan hidupmu berharga.
-
-Selamat ulang tahun seiii.
-Semoga cintaa, doa, harapan, dan kebaikan selalu nemuin jalan pulang ke kamu.`
-
-let letterInterval = null
-
+let letterInterval=null
 function clearLetter(){
   if(letterInterval) clearInterval(letterInterval)
-  letterInterval = null
-  letterScroller.innerHTML = ""
+  letterInterval=null
+  letterScroller.innerHTML=""
 }
-
 function animateLetter(){
   clearLetter()
   const tokens = letterText.split(/(\s+)/)
-  const nodes = tokens.map(t=>{
-    if(t.trim()==="") return document.createTextNode(t)
-    const s = document.createElement("span")
-    s.className = "word"
-    s.textContent = t
-    return s
+  tokens.forEach(t=>{
+    if(t.trim()===""){ letterScroller.appendChild(document.createTextNode(t)); return }
+    const s=document.createElement("span")
+    s.className="word"
+    s.textContent=t
+    letterScroller.appendChild(s)
   })
-  nodes.forEach(n=> letterScroller.appendChild(n))
-
   const words = Array.from(letterScroller.querySelectorAll(".word"))
-  let idx = 0
-  letterScroller.scrollTop = 0
-
-  letterInterval = setInterval(()=>{
-    if(idx >= words.length){
-      clearInterval(letterInterval)
-      letterInterval = null
-      return
-    }
+  let idx=0
+  letterScroller.scrollTop=0
+  letterInterval=setInterval(()=>{
+    if(idx>=words.length){ clearInterval(letterInterval); letterInterval=null; return }
     words[idx].classList.add("show")
     idx++
     const nearBottom = (letterScroller.scrollHeight - (letterScroller.scrollTop + letterScroller.clientHeight)) < 140
     if(nearBottom) letterScroller.scrollTop = letterScroller.scrollHeight
   }, 70)
 }
-
 replayLetterBtn.addEventListener("click", animateLetter)
 
 function onEnterSlide(i){
   if(i !== 2) stopMic()
-
-  if(i === 0){
-    if(!gameStartedOnce){
-      gameStartedOnce = true
-      unlockTo(0)
-      setTimeout(startGame, 250)
-    }
-  }
-
   if(i === 2){
-    blown = false
-    blowStable = 0
-    cakeImg.src = "assets/cake_on.gif"
-    nextAfterCakeBtn.disabled = true
-    micStatus.textContent = "Menunggu izin microphone…"
-    micStatus.style.color = "var(--muted)"
-    blowMeter.hidden = true
-    blowBar.style.width = "0%"
-
-    if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
-      requestMic()
-    }else{
-      micStatus.textContent = "Perangkat ini tidak dukung mic API. Tap kuenya aja."
-      micStatus.style.color = "var(--bad)"
-    }
+    blown=false; blowStable=0
+    cakeImg.src="assets/cake_on.gif"
+    nextAfterCakeBtn.disabled=true
+    micStatus.textContent="Menunggu izin microphone…"
+    micStatus.style.color="var(--muted)"
+    blowMeter.hidden=true
+    blowBar.style.width="0%"
   }
-
-  if(i === 7){
-    animateLetter()
-  }
+  if(i === 7) animateLetter()
 }
 
 unlockTo(0)
 setSlide(0)
+
+window.addEventListener("load", ()=>{
+  if(gameStarted) return
+  gameStarted = true
+  setTimeout(startGame, 300)
+})

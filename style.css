@@ -435,3 +435,6 @@ body{
 
 .modal{ z-index: 99999 !important; pointer-events:auto !important; }
 .modal-card, .modal-card *{ pointer-events:auto !important; }
+
+.modal{ z-index:99999 !important; pointer-events:auto !important; }
+.modal-card, .modal-card *{ pointer-events:auto !important; }
