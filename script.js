@@ -81,7 +81,7 @@ modalBtn.addEventListener("click", (e)=>{
   e.stopPropagation()
   closeModal()
   setSlide(0)
-  startGame()
+  setTimeout(startGame, 80)
 })
 
 document.addEventListener("click", (e)=>{
@@ -98,10 +98,12 @@ document.addEventListener("click", (e)=>{
 
 let gameRunning = false
 let gameCaught = 0
-let gameEndAt = 0
+let gameStartT = 0
+let gameEndT = 0
 let gameRaf = null
 let spawnTimer = null
 let gameStartedOnce = false
+let starting = false
 
 function clearGame(){
   if(gameRaf) cancelAnimationFrame(gameRaf)
@@ -110,6 +112,7 @@ function clearGame(){
   spawnTimer = null
   gameArea.innerHTML = ""
   gameRunning = false
+  starting = false
 }
 
 function rand(min, max){ return Math.random()*(max-min)+min }
@@ -166,7 +169,8 @@ function spawnButterfly(){
 
 function tickGame(){
   if(!gameRunning) return
-  const msLeft = gameEndAt - Date.now()
+  const now = performance.now()
+  const msLeft = gameEndT - now
   const secLeft = Math.max(0, Math.ceil(msLeft / 1000))
   timerText.textContent = `${secLeft}`
   if(msLeft <= 0){
@@ -177,15 +181,20 @@ function tickGame(){
 }
 
 function startGame(){
+  if(starting) return
+  starting = true
   closeModal()
   clearGame()
 
   gameRunning = true
   gameCaught = 0
   caughtText.textContent = "0"
-  gameEndAt = Date.now() + 30000
   timerText.textContent = "30"
   softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
+
+  const now = performance.now()
+  gameStartT = now
+  gameEndT = now + 30000
 
   spawnTimer = setInterval(()=>{
     if(!gameRunning) return
@@ -392,9 +401,7 @@ function onEnterSlide(i){
     if(!gameStartedOnce){
       gameStartedOnce = true
       unlockTo(0)
-      setTimeout(startGame, 200)
-    }else{
-      setTimeout(startGame, 150)
+      setTimeout(startGame, 250)
     }
   }
 
