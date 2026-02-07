@@ -81,7 +81,7 @@ modalBtn.addEventListener("click", (e)=>{
   e.stopPropagation()
   closeModal()
   setSlide(0)
-  setTimeout(startGame, 80)
+  setTimeout(startGame, 100)
 })
 
 document.addEventListener("click", (e)=>{
@@ -98,115 +98,62 @@ document.addEventListener("click", (e)=>{
 
 let gameRunning = false
 let gameCaught = 0
-let gameStartT = 0
-let gameEndT = 0
-let gameRaf = null
+
+let gameDeadline = 0
+let gameTickInt = null
 let spawnTimer = null
-let gameStartedOnce = false
-let starting = false
+let loseTimeout = null
+let gameBooted = false
 
 function clearGame(){
-  if(gameRaf) cancelAnimationFrame(gameRaf)
-  gameRaf = null
+  if(gameTickInt) clearInterval(gameTickInt)
+  gameTickInt = null
   if(spawnTimer) clearInterval(spawnTimer)
   spawnTimer = null
+  if(loseTimeout) clearTimeout(loseTimeout)
+  loseTimeout = null
+
   gameArea.innerHTML = ""
   gameRunning = false
-  starting = false
 }
 
-function rand(min, max){ return Math.random()*(max-min)+min }
-
-function spawnButterfly(){
-  const b = document.createElement("div")
-  b.className = "butterfly"
-
-  const w = gameArea.clientWidth
-  const h = gameArea.clientHeight
-  const x = rand(10, w-64)
-  const y = rand(10, h-64)
-  b.style.left = `${x}px`
-  b.style.top = `${y}px`
-  b.style.animationDuration = `${rand(1.0, 1.8)}s`
-
-  const vx = rand(-1.4, 1.4)
-  const vy = rand(-1.1, 1.1)
-
-  let px = x
-  let py = y
-  let alive = true
-
-  const mover = setInterval(()=>{
-    if(!alive) return
-    px += vx * 3.2
-    py += vy * 3.0
-    if(px < 0 || px > w-54) px = clamp(px, 0, w-54)
-    if(py < 0 || py > h-54) py = clamp(py, 0, h-54)
-    b.style.left = `${px}px`
-    b.style.top = `${py}px`
-  }, 40)
-
-  b.addEventListener("click", ()=>{
-    if(!gameRunning) return
-    alive = false
-    clearInterval(mover)
-    b.remove()
-    gameCaught++
-    caughtText.textContent = `${gameCaught}`
-    if(gameCaught >= 10) winGame()
-  }, {passive:true})
-
-  gameArea.appendChild(b)
-
-  setTimeout(()=>{
-    if(alive){
-      alive = false
-      clearInterval(mover)
-      b.remove()
-    }
-  }, 2400)
-}
-
-function tickGame(){
-  if(!gameRunning) return
-  const now = performance.now()
-  const msLeft = gameEndT - now
-  const secLeft = Math.max(0, Math.ceil(msLeft / 1000))
-  timerText.textContent = `${secLeft}`
-  if(msLeft <= 0){
-    loseGame()
-    return
-  }
-  gameRaf = requestAnimationFrame(tickGame)
+function nowMs(){
+  return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()
 }
 
 function startGame(){
-  if(starting) return
-  starting = true
   closeModal()
   clearGame()
 
   gameRunning = true
   gameCaught = 0
   caughtText.textContent = "0"
+
+  const start = nowMs()
+  gameDeadline = start + 30000
   timerText.textContent = "30"
   softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
-  const now = performance.now()
-  gameStartT = now
-  gameEndT = now + 30000
+  loseTimeout = setTimeout(()=>{
+    if(gameRunning) loseGame()
+  }, 30000)
+
+  gameTickInt = setInterval(()=>{
+    if(!gameRunning) return
+    const left = Math.max(0, gameDeadline - nowMs())
+    const sec = Math.ceil(left / 1000)
+    timerText.textContent = `${sec}`
+  }, 120)
 
   spawnTimer = setInterval(()=>{
     if(!gameRunning) return
     spawnButterfly()
     if(Math.random() < 0.25) spawnButterfly()
   }, 520)
-
-  gameRaf = requestAnimationFrame(tickGame)
 }
 
 function winGame(){
-  gameRunning = false
+  if(!gameRunning) return
   clearGame()
   softMessage(gameMsg, "Berhasil! Lanjut 🎀", "good")
   unlockTo(1)
@@ -214,10 +161,10 @@ function winGame(){
 }
 
 function loseGame(){
-  gameRunning = false
+  if(!gameRunning) return
   clearGame()
   softMessage(gameMsg, "Gagal.", "bad")
-  openModal("Yah gagal…", "Waktunya habis. Ulang sekali lagi ya.", "Ulangi Game")
+  openModal("Yah gagal…", "Waktunya habis. Ulang lagi ya.", "Ulangi Game")
 }
 
 playBtn.addEventListener("click", async ()=>{

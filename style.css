@@ -432,3 +432,6 @@ body{
   .butterfly{width:48px;height:48px}
   .letter{font-size:17px}
 }
+
+.modal{ z-index: 99999 !important; pointer-events:auto !important; }
+.modal-card, .modal-card *{ pointer-events:auto !important; }
