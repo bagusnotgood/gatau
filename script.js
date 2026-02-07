@@ -1,8 +1,5 @@
-const BUILD_ID = "build-20260207-3"
-
 const slides = Array.from(document.querySelectorAll(".slide"))
 const dotsWrap = document.getElementById("progressDots")
-document.getElementById("buildId").textContent = BUILD_ID
 
 const bgm = document.getElementById("bgm")
 const playBtn = document.getElementById("playBtn")
@@ -32,6 +29,7 @@ const modalBtn = document.getElementById("modalBtn")
 
 let currentSlide = 0
 let lockedUntil = 0
+let modalMode = "start"
 
 function clamp(n,a,b){ return Math.max(a, Math.min(b, n)) }
 
@@ -62,7 +60,8 @@ function softMessage(el, text, tone){
   el.style.color = tone === "bad" ? "var(--bad)" : tone === "good" ? "var(--good)" : "var(--muted)"
 }
 
-function openModal(title, text, btnText){
+function openModal(title, text, btnText, mode){
+  modalMode = mode || "start"
   modalTitle.textContent = title
   modalText.textContent = text
   modalBtn.textContent = btnText || "OK"
@@ -71,14 +70,21 @@ function openModal(title, text, btnText){
 
 function closeModal(){ modal.hidden = true }
 
-modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal() })
-
 modalBtn.addEventListener("click", (e)=>{
   e.preventDefault()
   e.stopPropagation()
   closeModal()
-  setSlide(0)
-  setTimeout(startGame, 120)
+
+  if(modalMode === "start"){
+    startGame()
+    return
+  }
+
+  if(modalMode === "retry"){
+    setSlide(0)
+    setTimeout(startGame, 150)
+    return
+  }
 })
 
 document.addEventListener("click", (e)=>{
@@ -102,7 +108,7 @@ let gameDeadline = 0
 let tickInt = null
 let spawnInt = null
 let loseTimeout = null
-let gameStarted = false
+let hasShownStartModal = false
 
 function clearGame(){
   if(tickInt) clearInterval(tickInt)
@@ -210,7 +216,7 @@ function loseGame(){
   if(!gameRunning) return
   clearGame()
   softMessage(gameMsg, "Gagal.", "bad")
-  openModal("Yah gagal…", "Waktunya habis. Ulang lagi ya.", "Ulangi Game")
+  openModal("Yah gagal…", "Waktunya habis. Ulang lagi ya.", "Ulangi Game", "retry")
 }
 
 playBtn.addEventListener("click", async ()=>{
@@ -310,11 +316,7 @@ nextAfterCakeBtn.addEventListener("click", ()=>{
 })
 
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
-di hari bertambahnya satu tahun usia kamu saat ini, aku harap kamu tau satu hal penting yang sering orang lain lupa bilang ke kamu secara utuh: kamu uda ngelakuin yang terbaik dengan semua keterbatasan, luka, dan beban yang kamu bawa. dan itu bukan hal yang kecil.
-
-Semoga di umur kamu yang sekarang, kamu tumbuh menjadi pribadi yang lebii baik lagi ya, bukan versi “sempurna” menurut dunia, tapi versi kamu yang lebi jujur sama diri sendiri, lebii lembut ke hati sendiri, dan lebii berani ngebela kebahagiaan kamu sendiri. Semoga kamu semakin kuat, bukan karena hidup berhenti nyakitin kamu, tapi karena kamu belajar berdiri meskipun kaki kamu bergerter, belajar bernapas meskipun dada kamu sesak, dan belajar bertahan walau rasanya ingin nyerah gitu aja.
-
-makasiii yaa buat sei, karena udaa bertahan sampe hari ini. ... (biarin teks panjang kamu tetap di sini)`
+(isi teks panjang kamu full di sini ya, jangan dipotong)`
 
 let letterInterval=null
 function clearLetter(){
@@ -357,13 +359,12 @@ function onEnterSlide(i){
     blowBar.style.width="0%"
   }
   if(i === 7) animateLetter()
+
+  if(i === 0 && !hasShownStartModal){
+    hasShownStartModal = true
+    openModal("Kita main game dulu ya, siap?", "Tangkap 10 kupu-kupu dalam 30 detik ya 💗", "Mulai", "start")
+  }
 }
 
 unlockTo(0)
 setSlide(0)
-
-window.addEventListener("load", ()=>{
-  if(gameStarted) return
-  gameStarted = true
-  setTimeout(startGame, 300)
-})
