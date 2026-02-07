@@ -1,3 +1,4 @@
+alert("Js baru kebaca")
 const slides = Array.from(document.querySelectorAll(".slide"))
 const dotsWrap = document.getElementById("progressDots")
 
