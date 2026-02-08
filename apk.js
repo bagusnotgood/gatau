@@ -27,6 +27,8 @@ const modalTitle = document.getElementById("modalTitle")
 const modalText = document.getElementById("modalText")
 const modalBtn = document.getElementById("modalBtn")
 
+const edgeDecor = document.getElementById("edgeDecor")
+
 let currentSlide = 0
 let lockedUntil = 0
 let startPromptShown = false
@@ -77,26 +79,14 @@ modalBtn.addEventListener("click", (e)=>{
   const mode = modal.dataset.mode || "info"
   closeModal()
 
-modalBtn.textContent = "Keklik"
-
   if(mode === "start"){
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        safeStartGame()
-      })
-    })
+    requestAnimationFrame(()=> requestAnimationFrame(()=> safeStartGame()))
     return
   }
 
-consule.log("gameArea size:", gameArea.clientWidth, gameArea.clientHeight)
-
   if(mode === "retry"){
     setSlide(0)
-    requestAnimationFrame(()=>{
-      requestAnimationFrame(()=>{
-        safeStartGame()
-      })
-    })
+    requestAnimationFrame(()=> requestAnimationFrame(()=> safeStartGame()))
     return
   }
 })
@@ -137,16 +127,17 @@ function clearGame(){
 function rand(min, max){ return Math.random()*(max-min)+min }
 
 function spawnButterfly(){
+  const w = gameArea.clientWidth
+  const h = gameArea.clientHeight
+  if(w < 80 || h < 120) return
+
   const b = document.createElement("div")
   b.className = "butterfly"
 
-  const w = gameArea.clientWidth
-  const h = gameArea.clientHeight
-  const x = rand(10, w-64)
-  const y = rand(10, h-64)
+  const x = rand(10, w-60)
+  const y = rand(10, h-60)
   b.style.left = `${x}px`
   b.style.top = `${y}px`
-  b.style.animationDuration = `${rand(1.0, 1.8)}s`
 
   const vx = rand(-1.4, 1.4)
   const vy = rand(-1.1, 1.1)
@@ -156,7 +147,7 @@ function spawnButterfly(){
   let alive = true
 
   const mover = setInterval(()=>{
-    if(!alive) return
+    if(!alive || !gameRunning) return
     px += vx * 3.2
     py += vy * 3.0
     if(px < 0 || px > w-54) px = clamp(px, 0, w-54)
@@ -173,7 +164,7 @@ function spawnButterfly(){
     gameCaught++
     caughtText.textContent = `${gameCaught}`
     if(gameCaught >= 10) winGame()
-  }, {passive:true})
+  })
 
   gameArea.appendChild(b)
 
@@ -339,7 +330,24 @@ nextAfterCakeBtn.addEventListener("click", ()=>{
 })
 
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
-(tempel teks panjang kamu full di sini ya)`
+di hari bertambahnya satu tahun usia kamu saat ini, aku harap kamu tau satu hal penting yang sering orang lain lupa bilang ke kamu secara utuh: kamu uda ngelakuin yang terbaik dengan semua keterbatasan, luka, dan beban yang kamu bawa. dan itu bukan hal yang kecil.
+
+Semoga di umur kamu yang sekarang, kamu tumbuh menjadi pribadi yang lebii baik lagi ya, bukan versi “sempurna” menurut dunia, tapi versi kamu yang lebi jujur sama diri sendiri, lebii lembut ke hati sendiri, dan lebii berani ngebela kebahagiaan kamu sendiri. Semoga kamu semakin kuat, bukan karena hidup berhenti nyakitin kamu, tapi karena kamu belajar berdiri meskipun kaki kamu bergerter, belajar bernapas meskipun dada kamu sesak, dan belajar bertahan walau rasanya ingin nyerah gitu aja.
+
+makasiii yaa buat sei, karena udaa bertahan sampe hari ini. makasii karena di balik semua “aku capee”, “aku pengen nyerah aja”, "aku ingin.." apapun yang kamu ucap, kamu tetep memilih satu hal yang paling sulit yaitu lanjut hidup. kamu mungkin merasa biasa aja, tapi kenyataannya, milih bertahan setiap hari itu adalah bentuk keberanian yang luar biasa tau.
+
+Aku tahu perjalanan kamu ga selalu gampang. Ada hari-hari ketika kamu harus kuat sendirian, ketika senyum kamu terpaksa, ketika hati kamu berisik tapi dunia tetep nuntut kamu buat baik-baik aja. dan meskipun begitu kamu tetep berjalan, jatuh-bangun, ragu, tapi tetep maju. Itu layak banget dihargaiin, dan kamu itu layak dibanggakan tauu.
+
+Semoga ke depan, hidup kamu lebih lembut sama kamu ya sei. Semoga kamu dikelilingi orang-orang yang benar-benar ngeliat kamu, ngedengerin kamu, dan ga ngecilin perasaan kamu. Semoga kamu diberi kebahagiaan yang tenang, bukan yang rame tapi isinya kosong. Semoga kamu nemuin kedamaian dalam hal-hal kecil, dan harapan di hari-hari yang sempat terasa begitu gelap.
+
+Aku berharap kamu belajar buat maafin diri sendiri atas hal-hal yang dulu gabisa kamu kendaliin ya. Belajar ngelepasin rasa bersalah yang bukan milik kamu. Belajar percaya kalo kamu pantas dicintai, bukan karena kamu kuat, bukan karena kamu berguna, tapi karena kamu ada.
+
+Aku bangga sama kamu. Bukan hanya karena kamu sampai di titik ini, tapi karena kamu ga nyerah meskipun dunia sering ga adil. Aku bangga sama cara kamu bertahan, dengan cara kamu tetep peduli meski hati kamu pernaa terluka, dan dengan cara kamu tetep hidup meski lelahnya ga selalu terlihat.
+
+Teruslah tumbuh, Sei. Tidak apa-apa kalau pelan. Tidak apa-apa kalau kamu perlu istirahat. Tidak apa-apa kalau kadang kamu jatuh lagi. Kamu tidak gagal hanya karena kamu manusia. Dan apa pun yang terjadi nanti, ingat satu hal ini: keberadaanmu berarti, dan hidupmu berharga.
+
+Selamat ulang tahun seiii.
+Semoga cintaa, doa, harapan, dan kebaikan selalu nemuin jalan pulang ke kamu.`
 
 let letterInterval=null
 function clearLetter(){
@@ -391,5 +399,44 @@ function onEnterSlide(i){
   if(i === 7) animateLetter()
 }
 
+function buildEdgeDecor(){
+  if(!edgeDecor) return
+  edgeDecor.innerHTML = ""
+
+  const emojis = ["💗","🎀","🫧","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
+  const w = window.innerWidth
+  const h = window.innerHeight
+
+  const gutter = Math.max(44, Math.min(68, Math.floor(w * 0.14)))
+  const countPerSide = Math.max(10, Math.min(18, Math.floor(h / 70)))
+
+  function place(side){
+    for(let i=0;i<countPerSide;i++){
+      const el = document.createElement("div")
+      el.className = "decor-emoji"
+      el.textContent = emojis[(Math.random()*emojis.length)|0]
+      const y = Math.floor((i + Math.random()*0.6) * (h / countPerSide))
+      const x = side === "left"
+        ? Math.floor(8 + Math.random()*(gutter - 18))
+        : Math.floor(w - gutter + Math.random()*(gutter - 18))
+      const size = Math.floor(16 + Math.random()*10)
+      el.style.left = x + "px"
+      el.style.top = Math.max(6, Math.min(h-24, y)) + "px"
+      el.style.fontSize = size + "px"
+      el.style.transform = `rotate(${Math.floor(-18 + Math.random()*36)}deg)`
+      edgeDecor.appendChild(el)
+    }
+  }
+
+  place("left")
+  place("right")
+}
+
+window.addEventListener("resize", ()=>{
+  clearTimeout(window.__decorT)
+  window.__decorT = setTimeout(buildEdgeDecor, 150)
+})
+
 unlockTo(0)
 setSlide(0)
+buildEdgeDecor()
