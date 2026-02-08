@@ -24,7 +24,6 @@ const blowMeter = document.getElementById("blowMeter")
 const blowBar = document.getElementById("blowBar")
 
 const letterScroller = document.getElementById("letterScroller")
-const replayLetterBtn = document.getElementById("replayLetterBtn")
 
 const edgeDecor = document.getElementById("edgeDecor")
 const fallDecor = document.getElementById("fallDecor")
@@ -161,7 +160,7 @@ function startGame(){
   gameRunning = true
   gameCaught = 0
   caughtText.textContent = "0"
-  timerText.textContent = "30"
+  timerText.textContent = "20"
   softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   const start = nowMs()
@@ -188,10 +187,10 @@ function startGame(){
 function showStartOverlay(){
   gameOverlay.hidden = false
   overlayTitle.textContent = "Kita main game dulu ya, siap?"
-  overlayText.textContent = "Tangkap 10 kupu-kupu dalam 30 detik ya 💗"
+  overlayText.textContent = "Tangkap 10 kupu-kupu dalam 20 detik ya 💗"
   overlayBtn.textContent = "Mulai"
   softMessage(gameMsg, "", "neutral")
-  timerText.textContent = "30"
+  timerText.textContent = "20"
   caughtText.textContent = "0"
 }
 
@@ -233,7 +232,7 @@ playBtn.addEventListener("click", async ()=>{
       playBtn.textContent = "Play"
     }
   }catch{
-    musicHint.textContent = "Audio diblokir. Tap Play lagi (browser sok ngatur)."
+    musicHint.textContent = "Audio diblokir. Tap Play lagi."
     musicHint.style.color = "var(--bad)"
   }
 })
@@ -254,7 +253,7 @@ function extinguishCake(reason){
   blown = true
   cakeImg.src = "assets/cake_off.png"
   nextAfterCakeBtn.disabled = false
-  micStatus.textContent = reason === "mic" ? "Yay! Lilinnya mati karena tiupan kamu 💨" : "Oke! Lilinnya mati karena tap 🎀"
+  micStatus.textContent = reason === "mic" ? "YEYYY LILINNYA MATIII 💨" : "YAYYY LILINNYA MATIII 💖"
   micStatus.style.color = "var(--good)"
   blowBar.style.width = "0%"
   stopMic()
@@ -298,7 +297,7 @@ async function requestMic(){
 
     rafId = requestAnimationFrame(tick)
   }catch{
-    micStatus.textContent = "Izin mic ditolak / nggak tersedia. Tap kuenya aja ya."
+    micStatus.textContent = "Izin mic ditolak / ga tersedia. Tap kuenya aja ya."
     micStatus.style.color = "var(--bad)"
     blowMeter.hidden = true
     stopMic()
@@ -355,11 +354,8 @@ function animateLetter(){
     idx++
     const nearBottom = (letterScroller.scrollHeight - (letterScroller.scrollTop + letterScroller.clientHeight)) < 140
     if(nearBottom) letterScroller.scrollTop = letterScroller.scrollHeight
-  }, 70)
-}
-
-replayLetterBtn.addEventListener("click", animateLetter)
-
+  }, 140)
+} 
 function onEnterSlide(i){
   if(i !== 2) stopMic()
 
