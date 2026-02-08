@@ -438,3 +438,31 @@ body{
 
 .modal{ z-index:99999 !important; pointer-events:auto !important; }
 .modal-card, .modal-card *{ pointer-events:auto !important; }
+
+#app::before,
+.card::before,
+.card::after,
+.dots,
+.dot{
+    pointer-events: none !important;
+  }
+
+.modal{
+  position:fixed !important;
+  inset: 0 !important;
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+.modal-card{
+  position: relative !important;
+  z-index: 2147483647 !important;
+  pointer-events: auto !important;
+}
+
+.modal-card{
+  pointer-events: auto !important;
+}
+
+.slide{ z-index: 1 !important; }
+.card{ z-index: 2 !important; }
