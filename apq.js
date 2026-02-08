@@ -77,6 +77,8 @@ modalBtn.addEventListener("click", (e)=>{
   const mode = modal.dataset.mode || "info"
   closeModal()
 
+modalBtn.textContent = "Keklik"
+
   if(mode === "start"){
     requestAnimationFrame(()=>{
       requestAnimationFrame(()=>{
@@ -85,6 +87,8 @@ modalBtn.addEventListener("click", (e)=>{
     })
     return
   }
+
+consule.log("gameArea size:", gameArea.clientWidth, gameArea.clientHeight)
 
   if(mode === "retry"){
     setSlide(0)
