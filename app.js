@@ -1,4 +1,3 @@
-alert("Js baru kebaca")
 const slides = Array.from(document.querySelectorAll(".slide"))
 const dotsWrap = document.getElementById("progressDots")
 
@@ -30,7 +29,7 @@ const modalBtn = document.getElementById("modalBtn")
 
 let currentSlide = 0
 let lockedUntil = 0
-let modalMode = "start"
+let startPromptShown = false
 
 function clamp(n,a,b){ return Math.max(a, Math.min(b, n)) }
 
@@ -62,7 +61,7 @@ function softMessage(el, text, tone){
 }
 
 function openModal(title, text, btnText, mode){
-  modalMode = mode || "start"
+  modal.dataset.mode = mode || "info"
   modalTitle.textContent = title
   modalText.textContent = text
   modalBtn.textContent = btnText || "OK"
@@ -74,16 +73,26 @@ function closeModal(){ modal.hidden = true }
 modalBtn.addEventListener("click", (e)=>{
   e.preventDefault()
   e.stopPropagation()
+
+  const mode = modal.dataset.mode || "info"
   closeModal()
 
-  if(modalMode === "start"){
-    startGame()
+  if(mode === "start"){
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        safeStartGame()
+      })
+    })
     return
   }
 
-  if(modalMode === "retry"){
+  if(mode === "retry"){
     setSlide(0)
-    setTimeout(startGame, 150)
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{
+        safeStartGame()
+      })
+    })
     return
   }
 })
@@ -109,7 +118,6 @@ let gameDeadline = 0
 let tickInt = null
 let spawnInt = null
 let loseTimeout = null
-let hasShownStartModal = false
 
 function clearGame(){
   if(tickInt) clearInterval(tickInt)
@@ -203,6 +211,16 @@ function startGame(){
     spawnButterfly()
     if(Math.random() < 0.25) spawnButterfly()
   }, 520)
+}
+
+function safeStartGame(){
+  const w = gameArea.clientWidth
+  const h = gameArea.clientHeight
+  if(w < 80 || h < 120){
+    setTimeout(safeStartGame, 90)
+    return
+  }
+  startGame()
 }
 
 function winGame(){
@@ -317,7 +335,7 @@ nextAfterCakeBtn.addEventListener("click", ()=>{
 })
 
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
-(isi teks panjang kamu full di sini ya, jangan dipotong)`
+(tempel teks panjang kamu full di sini ya)`
 
 let letterInterval=null
 function clearLetter(){
@@ -350,6 +368,12 @@ replayLetterBtn.addEventListener("click", animateLetter)
 
 function onEnterSlide(i){
   if(i !== 2) stopMic()
+
+  if(i === 0 && !startPromptShown){
+    startPromptShown = true
+    openModal("Kita main game dulu ya, siap?", "Tangkap 10 kupu-kupu dalam 30 detik ya 💗", "Mulai", "start")
+  }
+
   if(i === 2){
     blown=false; blowStable=0
     cakeImg.src="assets/cake_on.gif"
@@ -359,58 +383,9 @@ function onEnterSlide(i){
     blowMeter.hidden=true
     blowBar.style.width="0%"
   }
+
   if(i === 7) animateLetter()
-
-  if(i === 0 && !hasShownStartModal){
-    hasShownStartModal = true
-    openModal("Kita main game dulu ya, siap?", "Tangkap 10 kupu-kupu dalam 30 detik ya 💗", "Mulai", "start")
-  }
 }
-
-const edgeDecor = document.getElementById("edgeDecor")
-
-function buildEdgeDecor(){
-  if(!edgeDecor) return
-  edgeDecor.innerHTML = ""
-
-  const emojis = ["💗","🎀","🫧","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
-  const w = window.innerWidth
-  const h = window.innerHeight
-
-  const gutter = Math.max(44, Math.min(64, Math.floor(w * 0.14)))
-  const countPerSide = Math.max(10, Math.min(18, Math.floor(h / 70)))
-
-  function place(side){
-    for(let i=0;i<countPerSide;i++){
-      const el = document.createElement("div")
-      el.className = "decor-emoji"
-      el.textContent = emojis[(Math.random()*emojis.length)|0]
-
-      const y = Math.floor((i + Math.random()*0.6) * (h / countPerSide))
-      const x = side === "left"
-        ? Math.floor(8 + Math.random()*(gutter - 20))
-        : Math.floor(w - gutter + Math.random()*(gutter - 20))
-
-      const size = Math.floor(16 + Math.random()*10)
-      el.style.left = x + "px"
-      el.style.top = Math.max(6, Math.min(h-24, y)) + "px"
-      el.style.fontSize = size + "px"
-      el.style.transform = `rotate(${Math.floor(-18 + Math.random()*36)}deg)`
-
-      edgeDecor.appendChild(el)
-    }
-  }
-
-  place("left")
-  place("right")
-}
-
-window.addEventListener("resize", ()=>{
-  clearTimeout(window.__decorT)
-  window.__decorT = setTimeout(buildEdgeDecor, 150)
-})
-
-buildEdgeDecor()
 
 unlockTo(0)
 setSlide(0)
