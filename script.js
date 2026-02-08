@@ -3,7 +3,6 @@ const dotsWrap = document.getElementById("progressDots")
 
 const bgm = document.getElementById("bgm")
 const playBtn = document.getElementById("playBtn")
-const tapMusicBtn = document.getElementById("tapMusicBtn")
 const musicHint = document.getElementById("musicHint")
 
 const gameArea = document.getElementById("gameArea")
@@ -28,6 +27,7 @@ const letterScroller = document.getElementById("letterScroller")
 const replayLetterBtn = document.getElementById("replayLetterBtn")
 
 const edgeDecor = document.getElementById("edgeDecor")
+const fallDecor = document.getElementById("fallDecor")
 
 let currentSlide = 0
 let lockedUntil = 0
@@ -57,11 +57,9 @@ function setSlide(i){
 }
 
 document.addEventListener("click", (e)=>{
-  const active = slides[currentSlide]
-  const card = active.querySelector(".card")
-  if(!card) return
-  if(card.dataset.tapNext !== "true") return
-  if(e.target.closest("button")) return
+  const btn = e.target.closest("[data-next]")
+  if(!btn) return
+  if(btn.disabled) return
   unlockTo(currentSlide + 1)
   setSlide(currentSlide + 1)
 }, true)
@@ -240,11 +238,6 @@ playBtn.addEventListener("click", async ()=>{
   }
 })
 
-tapMusicBtn.addEventListener("click", ()=>{
-  unlockTo(2)
-  setSlide(2)
-})
-
 let micStream=null, audioCtx=null, analyser=null, micSource=null, rafId=null
 let blown=false, blowStable=0
 
@@ -316,13 +309,25 @@ requestMicBtn.addEventListener("click", requestMic)
 tapCakeBtn.addEventListener("click", ()=> extinguishCake("tap"))
 cakeImg.addEventListener("click", ()=> extinguishCake("tap"))
 
-nextAfterCakeBtn.addEventListener("click", ()=>{
-  unlockTo(3)
-  setSlide(3)
-})
-
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
-(tempel teks panjang kamu di sini)`
+di hari bertambahnya satu tahun usia kamu saat ini, aku harap kamu tau satu hal penting yang sering orang lain lupa bilang ke kamu secara utuh: kamu uda ngelakuin yang terbaik dengan semua keterbatasan, luka, dan beban yang kamu bawa. dan itu bukan hal yang kecil.
+
+Semoga di umur kamu yang sekarang, kamu tumbuh menjadi pribadi yang lebii baik lagi ya, bukan versi “sempurna” menurut dunia, tapi versi kamu yang lebi jujur sama diri sendiri, lebii lembut ke hati sendiri, dan lebii berani ngebela kebahagiaan kamu sendiri. Semoga kamu semakin kuat, bukan karena hidup berhenti nyakitin kamu, tapi karena kamu belajar berdiri meskipun kaki kamu bergerter, belajar bernapas meskipun dada kamu sesak, dan belajar bertahan walau rasanya ingin nyerah gitu aja.
+
+makasiii yaa buat sei, karena udaa bertahan sampe hari ini. makasii karena di balik semua “aku capee”, “aku pengen nyerah aja”, "aku ingin.." apapun yang kamu ucap, kamu tetep memilih satu hal yang paling sulit yaitu lanjut hidup. kamu mungkin merasa biasa aja, tapi kenyataannya, milih bertahan setiap hari itu adalah bentuk keberanian yang luar biasa tau.
+
+Aku tahu perjalanan kamu ga selalu gampang. Ada hari-hari ketika kamu harus kuat sendirian, ketika senyum kamu terpaksa, ketika hati kamu berisik tapi dunia tetep nuntut kamu buat baik-baik aja. dan meskipun begitu kamu tetep berjalan, jatuh-bangun, ragu, tapi tetep maju. Itu layak banget dihargaiin, dan kamu itu layak dibanggakan tauu.
+
+Semoga ke depan, hidup kamu lebih lembut sama kamu ya sei. Semoga kamu dikelilingi orang-orang yang benar-benar ngeliat kamu, ngedengerin kamu, dan ga ngecilin perasaan kamu. Semoga kamu diberi kebahagiaan yang tenang, bukan yang rame tapi isinya kosong. Semoga kamu nemuin kedamaian dalam hal-hal kecil, dan harapan di hari-hari yang sempat terasa begitu gelap.
+
+Aku berharap kamu belajar buat maafin diri sendiri atas hal-hal yang dulu gabisa kamu kendaliin ya. Belajar ngelepasin rasa bersalah yang bukan milik kamu. Belajar percaya kalo kamu pantas dicintai, bukan karena kamu kuat, bukan karena kamu berguna, tapi karena kamu ada.
+
+Aku bangga sama kamu. Bukan hanya karena kamu sampai di titik ini, tapi karena kamu ga nyerah meskipun dunia sering ga adil. Aku bangga sama cara kamu bertahan, dengan cara kamu tetep peduli meski hati kamu pernaa terluka, dan dengan cara kamu tetep hidup meski lelahnya ga selalu terlihat.
+
+Teruslah tumbuh, Sei. Tidak apa-apa kalau pelan. Tidak apa-apa kalau kamu perlu istirahat. Tidak apa-apa kalau kadang kamu jatuh lagi. Kamu tidak gagal hanya karena kamu manusia. Dan apa pun yang terjadi nanti, ingat satu hal ini: keberadaanmu berarti, dan hidupmu berharga.
+
+Selamat ulang tahun seiii.
+Semoga cintaa, doa, harapan, dan kebaikan selalu nemuin jalan pulang ke kamu.`
 
 let letterInterval=null
 function clearLetter(){
@@ -358,9 +363,7 @@ replayLetterBtn.addEventListener("click", animateLetter)
 function onEnterSlide(i){
   if(i !== 2) stopMic()
 
-  if(i === 0){
-    showStartOverlay()
-  }
+  if(i === 0) showStartOverlay()
 
   if(i === 2){
     blown=false; blowStable=0
@@ -376,13 +379,10 @@ function onEnterSlide(i){
 }
 
 function buildEdgeDecor(){
-  if(!edgeDecor) return
   edgeDecor.innerHTML = ""
-
-  const emojis = ["💗","🎀","🫧","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
+  const emojis = ["💗","🎀","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
   const w = window.innerWidth
   const h = window.innerHeight
-
   const gutter = Math.max(44, Math.min(68, Math.floor(w * 0.14)))
   const countPerSide = Math.max(10, Math.min(18, Math.floor(h / 70)))
 
@@ -408,11 +408,44 @@ function buildEdgeDecor(){
   place("right")
 }
 
+function buildFallDecor(){
+  fallDecor.innerHTML = ""
+  const emojis = ["💗","🎀","🫧","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
+  const w = window.innerWidth
+  const gutter = Math.max(44, Math.min(68, Math.floor(w * 0.14)))
+  const count = Math.max(14, Math.min(26, Math.floor(w / 18)))
+
+  for(let i=0;i<count;i++){
+    const el = document.createElement("div")
+    el.className = "fall-emoji"
+    el.textContent = emojis[(Math.random()*emojis.length)|0]
+
+    const side = Math.random() < 0.5 ? "left" : "right"
+    const x = side === "left"
+      ? Math.floor(6 + Math.random()*(gutter - 10))
+      : Math.floor(w - gutter + Math.random()*(gutter - 10))
+
+    const size = Math.floor(14 + Math.random()*12)
+    const dur = (7 + Math.random()*6).toFixed(2)
+    const delay = (-Math.random()*dur).toFixed(2)
+
+    el.style.left = x + "px"
+    el.style.fontSize = size + "px"
+    el.style.animationDuration = dur + "s"
+    el.style.animationDelay = delay + "s"
+    fallDecor.appendChild(el)
+  }
+}
+
 window.addEventListener("resize", ()=>{
   clearTimeout(window.__decorT)
-  window.__decorT = setTimeout(buildEdgeDecor, 150)
+  window.__decorT = setTimeout(()=>{
+    buildEdgeDecor()
+    buildFallDecor()
+  }, 150)
 })
 
 unlockTo(0)
 setSlide(0)
 buildEdgeDecor()
+buildFallDecor()

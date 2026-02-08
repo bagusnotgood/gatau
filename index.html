@@ -9,17 +9,19 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css?v=build-20260208-3" />
+  <link rel="stylesheet" href="style.css?v=build-final-1" />
 </head>
 <body>
   <audio id="bgm" src="bgm.mp3" preload="auto" loop></audio>
 
   <div id="app">
     <div id="edgeDecor" aria-hidden="true"></div>
+    <div id="fallDecor" aria-hidden="true"></div>
+
     <div id="progressDots" class="dots"></div>
 
     <section class="slide active" data-slide="0">
-      <div class="card" data-tap-next="false">
+      <div class="card">
         <h1 class="title">🦋 Tangkap Kupu-Kupu</h1>
         <p class="subtitle">Tangkap <b>10</b> kupu-kupu dalam <b>30 detik</b>. Nggak bisa skip ya.</p>
 
@@ -42,19 +44,19 @@
     </section>
 
     <section class="slide" data-slide="1">
-      <div class="card" data-tap-next="false">
+      <div class="card">
         <h1 class="title">🎶 Music</h1>
         <img class="spotify" src="assets/spotify.jpg" alt="Spotify" />
         <div class="row">
           <button id="playBtn" class="btn primary">Play</button>
-          <button id="tapMusicBtn" class="btn">Tap</button>
+          <button id="tapMusicBtn" class="btn primary tap-next-btn" data-next>Tap</button>
         </div>
         <p class="hint" id="musicHint">Kalau audio nggak bunyi, itu ulah browser.</p>
       </div>
     </section>
 
     <section class="slide" data-slide="2">
-      <div class="card" data-tap-next="false">
+      <div class="card">
         <h1 class="title">🕯 Tiup Lilin</h1>
         <p class="subtitle">Izinkan mic, tiup lilinnya. Kalau mic-nya drama, tap kuenya.</p>
 
@@ -72,53 +74,63 @@
           <button id="tapCakeBtn" class="btn">Tap Kue</button>
         </div>
 
-        <button id="nextAfterCakeBtn" class="btn primary full" disabled>Lanjut</button>
+        <div class="row" style="margin-top:10px;">
+          <button id="nextAfterCakeBtn" class="btn primary tap-next-btn" disabled data-next>Tap</button>
+        </div>
       </div>
     </section>
 
     <section class="slide" data-slide="3">
-      <div class="card tappable" data-tap-next="true">
+      <div class="card">
         <img class="hero-gif" src="assets/happy.gif" alt="Happy" />
         <h2 class="title center">Happy Birthday Seira Heartifillia</h2>
-        <p class="subtitle center">Tap di mana aja buat lanjut.</p>
+        <div class="row">
+          <button class="btn primary tap-next-btn" data-next>Tap</button>
+        </div>
       </div>
     </section>
 
     <section class="slide" data-slide="4">
-      <div class="card tappable" data-tap-next="true">
+      <div class="card">
         <img class="photo" src="assets/foto1.jpg" alt="Foto 1" />
         <p class="caption">kadang aku mikir,
 nggak semua orang sadar
 kalau kehadiran mereka itu beneran berarti
 dan kamu salah satunya, sei</p>
-        <p class="subtitle center">Tap untuk lanjut.</p>
+        <div class="row">
+          <button class="btn primary tap-next-btn" data-next>Tap</button>
+        </div>
       </div>
     </section>
 
     <section class="slide" data-slide="5">
-      <div class="card tappable" data-tap-next="true">
+      <div class="card">
         <img class="photo" src="assets/foto2.jpg" alt="Foto 2" />
         <p class="caption">ada banyak versi kamu yang sudah lewat sejauh ini
 yang capek, yang ragu, yang kuat diam-diam
 dan semuanya tetap sampai ke hari ini
 
 itu aja sudah cukup buat dihargai</p>
-        <p class="subtitle center">Tap untuk lanjut.</p>
+        <div class="row">
+          <button class="btn primary tap-next-btn" data-next>Tap</button>
+        </div>
       </div>
     </section>
 
     <section class="slide" data-slide="6">
-      <div class="card tappable" data-tap-next="true">
+      <div class="card">
         <img class="photo" src="assets/foto3.jpg" alt="Foto 3" />
         <p class="caption">jadi hari ini,
 aku pengin kamu baca ini pelan-pelan tanpa buru-buru, tanpa ngerasa harus apa-apa
 aku cuma pengin bilang sesuatu ke kamu 🤍</p>
-        <p class="subtitle center">Tap untuk lanjut.</p>
+        <div class="row">
+          <button class="btn primary tap-next-btn" data-next>Tap</button>
+        </div>
       </div>
     </section>
 
     <section class="slide" data-slide="7">
-      <div class="card letter-card" data-tap-next="false">
+      <div class="card letter-card">
         <h1 class="title center handwritten-title">HAPPY BIRTHDAY SEIRA HEARTIFILLIA</h1>
 
         <div class="letter-shell">
@@ -136,6 +148,6 @@ aku cuma pengin bilang sesuatu ke kamu 🤍</p>
     </section>
   </div>
 
-  <script src="script.js?v=build-20260208-3"></script>
+  <script src="script.js?v=build-final-1"></script>
 </body>
 </html>
