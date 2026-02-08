@@ -367,5 +367,50 @@ function onEnterSlide(i){
   }
 }
 
+const edgeDecor = document.getElementById("edgeDecor")
+
+function buildEdgeDecor(){
+  if(!edgeDecor) return
+  edgeDecor.innerHTML = ""
+
+  const emojis = ["💗","🎀","🫧","✨","🌸","🧸","🍓","🦋","💞","🩷","🌷","⭐️"]
+  const w = window.innerWidth
+  const h = window.innerHeight
+
+  const gutter = Math.max(44, Math.min(64, Math.floor(w * 0.14)))
+  const countPerSide = Math.max(10, Math.min(18, Math.floor(h / 70)))
+
+  function place(side){
+    for(let i=0;i<countPerSide;i++){
+      const el = document.createElement("div")
+      el.className = "decor-emoji"
+      el.textContent = emojis[(Math.random()*emojis.length)|0]
+
+      const y = Math.floor((i + Math.random()*0.6) * (h / countPerSide))
+      const x = side === "left"
+        ? Math.floor(8 + Math.random()*(gutter - 20))
+        : Math.floor(w - gutter + Math.random()*(gutter - 20))
+
+      const size = Math.floor(16 + Math.random()*10)
+      el.style.left = x + "px"
+      el.style.top = Math.max(6, Math.min(h-24, y)) + "px"
+      el.style.fontSize = size + "px"
+      el.style.transform = `rotate(${Math.floor(-18 + Math.random()*36)}deg)`
+
+      edgeDecor.appendChild(el)
+    }
+  }
+
+  place("left")
+  place("right")
+}
+
+window.addEventListener("resize", ()=>{
+  clearTimeout(window.__decorT)
+  window.__decorT = setTimeout(buildEdgeDecor, 150)
+})
+
+buildEdgeDecor()
+
 unlockTo(0)
 setSlide(0)

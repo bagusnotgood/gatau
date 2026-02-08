@@ -466,3 +466,24 @@ body{
 
 .slide{ z-index: 1 !important; }
 .card{ z-index: 2 !important; }
+
+#edgeDecor{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.decor-emoji{
+  position: absolute;
+  opacity: .35;
+  filter: blur(.2px);
+  user-select: none;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+#app{ position: relative; z-index: 1; }
+.slide{ position: absolute; z-index: 2; }
+.card{ position: relative; z-index: 3; }
+.modal{ z-index: 2147483647 !important; }
