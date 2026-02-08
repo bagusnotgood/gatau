@@ -164,11 +164,11 @@ function startGame(){
   softMessage(gameMsg, "Game mulai. Tangkap 10 kupu-kupu ya 💗", "neutral")
 
   const start = nowMs()
-  gameDeadline = start + 30000
+  gameDeadline = start + 20000
 
   loseTimeout = setTimeout(()=>{
     if(gameRunning) loseGame()
-  }, 30000)
+  }, 20000)
 
   tickInt = setInterval(()=>{
     if(!gameRunning) return
