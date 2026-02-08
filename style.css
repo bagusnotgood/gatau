@@ -17,6 +17,7 @@
 
 *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
 html,body{ height:100%; }
+
 body{
   margin:0;
   font-family: "Nunito", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -213,6 +214,44 @@ body{
   to{ transform: translateY(-6px) rotate(4deg) scale(1.03); }
 }
 
+/* overlay start/retry game */
+.game-overlay{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 240, 247, .55);
+  backdrop-filter: blur(6px);
+  border-radius: var(--radius);
+  z-index: 50;
+  pointer-events: auto;
+}
+
+.game-overlay[hidden]{ display:none; }
+
+.game-overlay-card{
+  width: min(420px, 86%);
+  background: rgba(255,255,255,.94);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 140, 190, .35);
+  box-shadow: 0 18px 40px rgba(60,30,50,.14);
+  padding: 16px 14px 14px;
+  text-align: center;
+  pointer-events: auto;
+}
+
+.overlay-title{
+  font-weight: 900;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.overlay-text{
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
 .cake-wrap{
   display:grid;
   gap: 10px;
@@ -308,7 +347,6 @@ body{
   line-height: 1.75;
   font-size: 14px;
   color: var(--text);
-  font-family: "Nunito", sans-serif;
 }
 
 .word{
@@ -321,42 +359,6 @@ body{
 .word.show{
   opacity: 1;
   transform: translateY(0);
-}
-
-.modal{
-  position: fixed;
-  inset: 0;
-  display:grid;
-  place-items:center;
-  background: rgba(0,0,0,.08);
-  backdrop-filter: blur(6px);
-  z-index: 2147483647 !important;
-  pointer-events: auto !important;
-}
-
-.modal[hidden]{ display:none; }
-
-.modal-card{
-  width: min(520px, 92vw);
-  background: rgba(255,255,255,.92);
-  border-radius: 22px;
-  border: 2px solid rgba(255, 140, 190, .35);
-  box-shadow: var(--shadow);
-  padding: 18px 16px 14px;
-  text-align:center;
-  pointer-events: auto !important;
-}
-
-.modal-title{
-  font-weight: 900;
-  font-size: 24px;
-  margin-bottom: 6px;
-}
-
-.modal-text{
-  color: var(--muted);
-  font-size: 14px;
-  margin-bottom: 14px;
 }
 
 #edgeDecor{

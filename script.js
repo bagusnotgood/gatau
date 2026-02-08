@@ -11,6 +11,11 @@ const timerText = document.getElementById("timerText")
 const caughtText = document.getElementById("caughtText")
 const gameMsg = document.getElementById("gameMsg")
 
+const gameOverlay = document.getElementById("gameOverlay")
+const overlayTitle = document.getElementById("overlayTitle")
+const overlayText = document.getElementById("overlayText")
+const overlayBtn = document.getElementById("overlayBtn")
+
 const requestMicBtn = document.getElementById("requestMicBtn")
 const tapCakeBtn = document.getElementById("tapCakeBtn")
 const nextAfterCakeBtn = document.getElementById("nextAfterCakeBtn")
@@ -22,16 +27,10 @@ const blowBar = document.getElementById("blowBar")
 const letterScroller = document.getElementById("letterScroller")
 const replayLetterBtn = document.getElementById("replayLetterBtn")
 
-const modal = document.getElementById("modal")
-const modalTitle = document.getElementById("modalTitle")
-const modalText = document.getElementById("modalText")
-const modalBtn = document.getElementById("modalBtn")
-
 const edgeDecor = document.getElementById("edgeDecor")
 
 let currentSlide = 0
 let lockedUntil = 0
-let startPromptShown = false
 
 function clamp(n,a,b){ return Math.max(a, Math.min(b, n)) }
 
@@ -57,50 +56,20 @@ function setSlide(i){
   onEnterSlide(currentSlide)
 }
 
-function softMessage(el, text, tone){
-  el.textContent = text
-  el.style.color = tone === "bad" ? "var(--bad)" : tone === "good" ? "var(--good)" : "var(--muted)"
-}
-
-function openModal(title, text, btnText, mode){
-  modal.dataset.mode = mode || "info"
-  modalTitle.textContent = title
-  modalText.textContent = text
-  modalBtn.textContent = btnText || "OK"
-  modal.hidden = false
-}
-
-function closeModal(){ modal.hidden = true }
-
-modalBtn.addEventListener("click", (e)=>{
-  e.preventDefault()
-  e.stopPropagation()
-
-  const mode = modal.dataset.mode || "info"
-  closeModal()
-
-  if(mode === "start"){
-    requestAnimationFrame(()=> requestAnimationFrame(()=> safeStartGame()))
-    return
-  }
-
-  if(mode === "retry"){
-    setSlide(0)
-    requestAnimationFrame(()=> requestAnimationFrame(()=> safeStartGame()))
-    return
-  }
-})
-
 document.addEventListener("click", (e)=>{
   const active = slides[currentSlide]
   const card = active.querySelector(".card")
   if(!card) return
   if(card.dataset.tapNext !== "true") return
-  if(modal.hidden === false) return
   if(e.target.closest("button")) return
   unlockTo(currentSlide + 1)
   setSlide(currentSlide + 1)
 }, true)
+
+function softMessage(el, text, tone){
+  el.textContent = text
+  el.style.color = tone === "bad" ? "var(--bad)" : tone === "good" ? "var(--good)" : "var(--muted)"
+}
 
 function nowMs(){
   return (typeof performance !== "undefined" && performance.now) ? performance.now() : Date.now()
@@ -177,9 +146,19 @@ function spawnButterfly(){
   }, 2400)
 }
 
+function safeStartGame(){
+  const w = gameArea.clientWidth
+  const h = gameArea.clientHeight
+  if(w < 80 || h < 120){
+    setTimeout(safeStartGame, 90)
+    return
+  }
+  startGame()
+}
+
 function startGame(){
-  closeModal()
   clearGame()
+  gameOverlay.hidden = true
 
   gameRunning = true
   gameCaught = 0
@@ -208,14 +187,21 @@ function startGame(){
   }, 520)
 }
 
-function safeStartGame(){
-  const w = gameArea.clientWidth
-  const h = gameArea.clientHeight
-  if(w < 80 || h < 120){
-    setTimeout(safeStartGame, 90)
-    return
-  }
-  startGame()
+function showStartOverlay(){
+  gameOverlay.hidden = false
+  overlayTitle.textContent = "Kita main game dulu ya, siap?"
+  overlayText.textContent = "Tangkap 10 kupu-kupu dalam 30 detik ya 💗"
+  overlayBtn.textContent = "Mulai"
+  softMessage(gameMsg, "", "neutral")
+  timerText.textContent = "30"
+  caughtText.textContent = "0"
+}
+
+function showRetryOverlay(){
+  gameOverlay.hidden = false
+  overlayTitle.textContent = "Yah gagal…"
+  overlayText.textContent = "Waktunya habis. Ulang lagi ya."
+  overlayBtn.textContent = "Ulangi Game"
 }
 
 function winGame(){
@@ -230,8 +216,14 @@ function loseGame(){
   if(!gameRunning) return
   clearGame()
   softMessage(gameMsg, "Gagal.", "bad")
-  openModal("Yah gagal…", "Waktunya habis. Ulang lagi ya.", "Ulangi Game", "retry")
+  showRetryOverlay()
 }
+
+overlayBtn.addEventListener("click", (e)=>{
+  e.preventDefault()
+  e.stopPropagation()
+  requestAnimationFrame(()=> requestAnimationFrame(()=> safeStartGame()))
+})
 
 playBtn.addEventListener("click", async ()=>{
   try{
@@ -330,24 +322,7 @@ nextAfterCakeBtn.addEventListener("click", ()=>{
 })
 
 const letterText = `Happy Birthday, Seiras Heartifilia aka Fadiaa..
-di hari bertambahnya satu tahun usia kamu saat ini, aku harap kamu tau satu hal penting yang sering orang lain lupa bilang ke kamu secara utuh: kamu uda ngelakuin yang terbaik dengan semua keterbatasan, luka, dan beban yang kamu bawa. dan itu bukan hal yang kecil.
-
-Semoga di umur kamu yang sekarang, kamu tumbuh menjadi pribadi yang lebii baik lagi ya, bukan versi “sempurna” menurut dunia, tapi versi kamu yang lebi jujur sama diri sendiri, lebii lembut ke hati sendiri, dan lebii berani ngebela kebahagiaan kamu sendiri. Semoga kamu semakin kuat, bukan karena hidup berhenti nyakitin kamu, tapi karena kamu belajar berdiri meskipun kaki kamu bergerter, belajar bernapas meskipun dada kamu sesak, dan belajar bertahan walau rasanya ingin nyerah gitu aja.
-
-makasiii yaa buat sei, karena udaa bertahan sampe hari ini. makasii karena di balik semua “aku capee”, “aku pengen nyerah aja”, "aku ingin.." apapun yang kamu ucap, kamu tetep memilih satu hal yang paling sulit yaitu lanjut hidup. kamu mungkin merasa biasa aja, tapi kenyataannya, milih bertahan setiap hari itu adalah bentuk keberanian yang luar biasa tau.
-
-Aku tahu perjalanan kamu ga selalu gampang. Ada hari-hari ketika kamu harus kuat sendirian, ketika senyum kamu terpaksa, ketika hati kamu berisik tapi dunia tetep nuntut kamu buat baik-baik aja. dan meskipun begitu kamu tetep berjalan, jatuh-bangun, ragu, tapi tetep maju. Itu layak banget dihargaiin, dan kamu itu layak dibanggakan tauu.
-
-Semoga ke depan, hidup kamu lebih lembut sama kamu ya sei. Semoga kamu dikelilingi orang-orang yang benar-benar ngeliat kamu, ngedengerin kamu, dan ga ngecilin perasaan kamu. Semoga kamu diberi kebahagiaan yang tenang, bukan yang rame tapi isinya kosong. Semoga kamu nemuin kedamaian dalam hal-hal kecil, dan harapan di hari-hari yang sempat terasa begitu gelap.
-
-Aku berharap kamu belajar buat maafin diri sendiri atas hal-hal yang dulu gabisa kamu kendaliin ya. Belajar ngelepasin rasa bersalah yang bukan milik kamu. Belajar percaya kalo kamu pantas dicintai, bukan karena kamu kuat, bukan karena kamu berguna, tapi karena kamu ada.
-
-Aku bangga sama kamu. Bukan hanya karena kamu sampai di titik ini, tapi karena kamu ga nyerah meskipun dunia sering ga adil. Aku bangga sama cara kamu bertahan, dengan cara kamu tetep peduli meski hati kamu pernaa terluka, dan dengan cara kamu tetep hidup meski lelahnya ga selalu terlihat.
-
-Teruslah tumbuh, Sei. Tidak apa-apa kalau pelan. Tidak apa-apa kalau kamu perlu istirahat. Tidak apa-apa kalau kadang kamu jatuh lagi. Kamu tidak gagal hanya karena kamu manusia. Dan apa pun yang terjadi nanti, ingat satu hal ini: keberadaanmu berarti, dan hidupmu berharga.
-
-Selamat ulang tahun seiii.
-Semoga cintaa, doa, harapan, dan kebaikan selalu nemuin jalan pulang ke kamu.`
+(tempel teks panjang kamu di sini)`
 
 let letterInterval=null
 function clearLetter(){
@@ -355,6 +330,7 @@ function clearLetter(){
   letterInterval=null
   letterScroller.innerHTML=""
 }
+
 function animateLetter(){
   clearLetter()
   const tokens = letterText.split(/(\s+)/)
@@ -376,14 +352,14 @@ function animateLetter(){
     if(nearBottom) letterScroller.scrollTop = letterScroller.scrollHeight
   }, 70)
 }
+
 replayLetterBtn.addEventListener("click", animateLetter)
 
 function onEnterSlide(i){
   if(i !== 2) stopMic()
 
-  if(i === 0 && !startPromptShown){
-    startPromptShown = true
-    openModal("Kita main game dulu ya, siap?", "Tangkap 10 kupu-kupu dalam 30 detik ya 💗", "Mulai", "start")
+  if(i === 0){
+    showStartOverlay()
   }
 
   if(i === 2){
